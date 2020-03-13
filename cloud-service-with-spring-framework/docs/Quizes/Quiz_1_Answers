@@ -1,0 +1,25 @@
+How is metadata about an HTTP request transmitted?
+	Headers
+
+Which of the following are ways of sending data to a server in an HTTP request?
+	all
+
+Which is not an appropriate use of an HTTP header?
+	communicate type of client sending the request
+	communicate type of server responding to a request
+
+What are mime types used for? 
+	type of data from client and vice versa
+
+Which of the following are components of a communication protocol?
+	Timing, Syntax and Semantics
+
+What are cookies used for?
+	store data needed by server on client, needed by server in request headers, in load balancer (incorrect)
+	needed by server in request headers, in load balancer, needed by client on the server (incorrect)
+
+What type of protocol is HTTP?
+	Request Response
+
+Which of the following differentiate query parameters from data sent in the body of a request?
+	encoded in different format & larger volume of data

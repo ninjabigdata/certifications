@@ -1,0 +1,81 @@
+Communication Protocols
+	Protocol
+		Set of rules for communicting with resources
+	Communicating with resources over network takes some time which includes establishing connection, processing and receiving the response
+	When to disconnect the communication?
+		Are decided by the protocol
+	What protocols define?
+		Syntax		--> how to communicate
+		Semantics	--> how to interpret msg
+		Timing		--> waiting time between two msgs
+	
+	HTTP
+		App protocol for communicating among devices in a network
+		HTTP Communication
+			Client initiates the request to server for a resource
+			the server receives and processes the request
+			The server either responds with the requested data or info why data is not sent
+		Why is HTTP chosen for cloud services?
+			Mobiles, browsers and devices can use the HTTP. Already HTTP is widely used by the industry and so HTTP is chosen for cloud services
+			HTTp provides a uniform interface for interacting with resources residing in the server. So the request processing does not vary based on the agent who requested (i.e, request from mobile or browser is treated in the same way)
+			Transferring data for session mgmt, data marshalling from HTTP is easy due to existing libraries and frameworks
+			Also load balancing the requests across the server
+		Limitations
+			Pushing data from server to mobile devices without client initiating the request
+	
+	Cloud Services
+		Communicating with resources residing in another system over a network via application
+		The application resides in a machine hosted in remote machine. Such app is called as cloud services
+		The cloud service handles
+			Receiving the request
+			Processing the request
+			Sending the data or error messages
+			Managing the crashes
+	
+	HTTP Request Methods
+		GET		get data from server / send less data to server
+		POST	Send lot of data to server
+		PUT		Save the data already residing in server as part of request. Like update the data in server
+		DELETE	Delete the data from server
+	
+	HTTP Request
+		Format / Parts of the request
+			Request line (mandatory)
+				request method
+				resource (path)
+			Headers (optional) -- meta / extra info for handling the request
+				language of the response f(rom server
+				character-set of response
+				content-type of the response
+				cookie
+					Initially sent by server to client in previous response. Now client uses the same to enable server identifying the client when processing subsequent requests
+			Request Body (Optional)
+				Any data sent from client for completing the request
+		
+		URL
+			Uniquely identifying the resource
+			Format
+				http://host:port/path
+			Query Parameters
+				the data available after ? in path
+				Format
+					key=value
+				multiple pairs are separated by &
+				Example:
+					http://host:port/path?a=1&b=2&c=3
+				Some spl characters cannot be part of query parameter like ?, = and &
+			URL Encoding
+				Spl characters not allowed in query parameter can be encoded, so that server decodes the same
+				This is already taken care in existing programming languages
+		
+		MIME Types & Content Type Headers
+			Helps to interpret the messages exchanged in the request and response by server and client
+			MIME type is an identifier for message type
+				Describes the body of the request/response
+			MIME types are specified in the content-type header of the HTTP request/reponse
+		
+		Request Body Encoding
+			Types
+				url encoded --> key value pairs
+				multi-part	--> for file upload as bytes. body is broken into parts of data
+			
