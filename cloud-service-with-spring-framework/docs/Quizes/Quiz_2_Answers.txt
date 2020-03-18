@@ -1,0 +1,15 @@
+What is the purpose of request routing?
+	Determine which function shld generate the response for a given request
+
+Which of the following are true of client request data
+	data could lead to injection attack
+	data shld be carefully sanitized and validated
+	
+How is HTTP used in cloud services
+	used as communication protocol
+	
+What is the relationship between a Spring controller and the dispatcher servlet?
+	Dispatcher servlet routes HTTP requests to one or more controllers to produce response
+
+Which of the following are true?
+	All

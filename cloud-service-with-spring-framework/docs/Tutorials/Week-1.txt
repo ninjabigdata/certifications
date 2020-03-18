@@ -78,4 +78,52 @@ Communication Protocols
 			Types
 				url encoded --> key value pairs
 				multi-part	--> for file upload as bytes. body is broken into parts of data
+		
+		HTTP Response
+			Format
+				Status Line
+					response code
+					response phrase or text
+				Headers
+					Content type
+				Response Body
+					response data
+			Response Codes
+				1xx	--> information message
+				2xx	--> success message
+					200 --> ok
+				3xx	--> Redirection message
+				4xx	--> resource not found / not authorized
+					400	--> resource not found
+				5xx	--> Server internal error
+		
+		Cookies
 			
+		HTTP Polling
+			Client makes request to server at reguar interval which ensure data is update to day
+			The time interval can be increased by certain limit when no newupdate is available and this can be reduced when new data is available
+			Web Sockets
+				client can request server to update to web socket upon connection is established
+				Advantages
+					the server can send data to client without request from client
+					reduces the overhaul data since this connection is dedicated one
+				Limitations
+					requires connection to be intact
+					if disconnects, new connection is required and also need to handle exception and data sync
+					web server is heavy load on server if no data is exchanged
+					
+		REST
+			URL for accessing resources
+			method of the request
+			
+		Push Messaging
+			pushing data from server to client
+			GCM Google Cloud Messasge
+				every android device has unique registration id allocated by gcm
+				the server can leverage this id for sending the response to gcm and gcm delivers the data to client
+				the gcm overcomes the limitations of web-sockets
+				The server can send the entired response to the GCM
+				But message sent to gcm must be less than 4kb
+				For larger data, the client and server go to polling called push to sync model
+					the server sends the response containing the details of polling to gcm
+					This can be useful for sensitive information since such info cannot reside on GCM

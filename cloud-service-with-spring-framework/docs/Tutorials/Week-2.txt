@@ -1,0 +1,38 @@
+Servlets
+	In server, HTTP requests are routed to web container which contains servlets
+	Servlet --> a java object
+		containing the methods for handling the http requests based on request method
+		servlet handles request for certain resources
+		this is decided the config available in web.xml
+		extends the HttpServlet class and override the required methods
+	
+	Request Routing
+		this is defined in web.xml
+			create / defining a servlet
+				name
+				class of the servlet
+			routing / mapping the url to the servlet
+				name of the servlet
+				url-pattern
+				
+	Securely Handling Client Data & Avoiding Injection Attacks
+		Sanitize the inputs recieved from the client
+		the data may cantain unwanted data or js or sql injections
+		Validate the client data
+		
+	Building Cloud Services on HTTP
+		Spring Dispatcher Servlet
+			Before starting to processing the work on input from client request, the following steps had to be done
+				Extract inputs from http request
+				Validate the inputs
+				Construct required java object
+			These steps can be overcome using Dispatcher Servlet provided by spring which routes the request to the appropriate controller's method
+			HTTPMessageConverter will convert the json to required java object specified as part of Requrest Body
+			
+			Handling Multipart Data
+				@RequestParam("data") MultipartFile object --> as input object to controller's method
+				For multiple files use MultipartFile[]
+				The multipartFile object has inputStream object to read the data
+				Specifying the multipartFile and other attributes like max size
+					Create a Bean for MultipartConfigElement
+						Create a MultipartConfigElement from MultipartConfigFactory and add the required attributes and return the MultipartConfigElement object
