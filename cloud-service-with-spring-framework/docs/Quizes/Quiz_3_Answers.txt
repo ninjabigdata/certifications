@@ -1,0 +1,26 @@
+Which of the following are true of dependency injection?
+	None of the above
+
+What is horizontal scaling?
+	Increasing no of hosts supporting a cloud application
+
+Which of the following would make horizontal scaling more difficult?
+	wrong
+	having state that persists across requests from a client
+	having state used by all fuctions on a host that service a given request
+	
+	wrong
+	having state that persists across requests from a client
+	having cookies that store data needed by the client
+	
+	wrong
+	having state that persists across requests from a client
+	having cookies that store data needed by the client
+	having state used by all fuctions on a host that service a given request
+
+What is the purpose of the ResponseBody annotation?
+	indicate the return value from a method should be transformed into the HTTP response body
+
+Which of the following are examples of IaaS?
+	providing ability to provision virtual machines to a cloud service
+	providing ability to provision network addresses to a cloud service

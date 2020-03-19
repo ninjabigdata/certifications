@@ -1,0 +1,77 @@
+Generating Responses
+	@ResponseBody
+	MessageConvertors converts Java object to JSON (by default) and vice versa
+
+Custom Marshalling with Jackson Annotations
+		Spring uses Jackson for converting object to JSON and vice versa
+			ObjectMapper --> class does the conversion
+			
+			How Jackson converts JSON to object
+				Creates an object using non-param constructor
+				Has readValue --> invokes setter for the attribute. Determines the data type of attribute based on the setter's param data type
+				@JsonIgnore to ignore the attribute duration conversion
+				@JsonProperty --> name of the attribute in JSON
+
+Sprint Boot & Application Structure
+	Sets-up embedded web container
+	Discover user created controllers
+	Set-up dispatcher servlet
+	Connection to DB, etc
+	
+Horizontal Scaling
+	Introduced to overcome Vertical Scaling (i.e., the system will be upgraded when the load increases)
+	In horizontal scaling, when load increases, the number of machines serving the requests gets increased. When one of the server goes down, another machine can replace it
+	Horizontal scaling depends on the architecture of the application. The architecture causes the horizontal scaling to staturate.
+		To overcome the staturation, stateless servers can be created
+
+Load Balancing - Stateful vs Stateless Apps
+	Problems to overcome in load balancing
+		How to route requests to different machines --> allocating the request to resource
+		Keeping track of load in machines
+	Solutions
+		Allocating request
+			Round-Robin methodology --> suitable for stateless apps
+			For Stateful applications
+				Remember state of the requests across the servers
+				Route request coming from same user to same server
+				Allocate 1 client to one server --> sticky session
+				Storing the authorization token stored in database, use that token for authenticating the server. This overcomes sticky session
+					Can use servcies like MemCache for sharing the sessions across the several machines
+					
+Auto Scaling
+	Offline scaling involves to add infrastructure to scale the app. When the request count decreases, need to take care of the handling the maintainance cost
+	In case of cloud, the scaling can be done when required. The cost is based on usage.
+	Problems to solve in Scaling
+		When to scale / reduce machines --> monitoring the load
+	This issue is already taken care in auto-scaling thru intelligence. Intelligence involves forecasting the demand and also replace the instance if any instance has crashed
+
+IaaS vs Paas
+	Iaas
+		cloud-service provider provides a VM on top of which the user can configure the VM
+			Advantages
+				Security, APIs available
+				Customization
+			Disadvantages
+				No auto-scaling
+				Monitor the load across the machines
+				Initial script for provisioning the VM
+				Additional responsibility
+	PaaS
+		Provides a platform for installing and running the app
+			Advantages
+				Tools tightly coupled for that platform like logging, performance
+				Auto scaling
+			Disadvantages
+				Customization is limited to the platform provided by the cloud service
+
+Offloading to Cloud Services
+		Decide what services to be offloaded to cloud services
+			based on cost (including managing infrastructure)
+		Advantages from cloud services
+			CDN --> Content Delivery Network
+			DB scaling
+			Cloud storage
+		Bandwidth charging is based on service provider
+
+Spring Dependency Injection & Auto-wiring
+	
