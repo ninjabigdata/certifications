@@ -1,0 +1,19 @@
+Threads
+	Ways to create Threads
+		By extending Thread class
+		By implementing Runnable interface
+		
+	How to run thread
+		threadObject.start()
+	
+	Other ways to create thread
+		Implementing anonymous inner class
+		Using ExecutorService
+
+Basic Thread Synchronization
+	Two problems when one thread sharing the data
+		Data being cached
+		Thread interleaving
+	
+	Purpose of volatile keyword
+		
