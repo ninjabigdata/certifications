@@ -1,0 +1,149 @@
+1. A counter that controls the access to one or more shared resources
+A. Mutex
+B. cyclicbarrier
+C. Semaphore -- correct
+D. CountDownLatch
+
+2. _________  interface provides method for computing and returning result
+A. Runnable
+B. Callable -- correct
+C. Executor
+D. ExecutorService
+
+3. What is valid about synchronized and java.util.concurrent.locks.ReentrantLock in thread concurrency in java
+A. synchronized Does not provide any fair locks.
+B. ReentrantLock provides fair lock
+C. ReentrantLock provides getQueueLength() method to return number of threads that may be waiting to acquire this lock.
+D. All of them -- correct
+
+4. _________  is a type of synchronizer which allows one Thread to wait for one or more Thread s before it starts processing. It works on latch principle, thread will wait until gate is open. 
+A. cyclicbarrier
+B. CountDownLatch -- correct
+C. Semaphore
+D. Mutex
+
+5. execute() method is defined in ________ interface.
+A. Callable
+B. Executor -- correct
+C. ExecutorService
+D. Runnable
+
+6. In java a thread can be created by ___________
+A. Extending the thread class
+B. Implementing Runnable interface
+C. Both of the above -- correct
+D. None of them
+
+7. What are important methods provided by Semaphore in maintaining concurrency
+A. acquire()/release() methods -- correct
+B. conquer()/release() methods
+C. acquire()/drop() methods
+D. conquer()/drop() methods
+
+8. The following statement cause :                         //Code called by Thread-1
+public void run() {
+synchronized (String.class) {
+Thread.sleep(100);
+synchronized (Object.class) {
+}
+}
+}
+//Code called by Thread-2
+public void run() {
+synchronized (Object.class) {
+Thread.sleep(100);
+synchronized (String.class) {
+}
+}
+}
+A. Deadlock -- correct
+B. runtime interrupted exception
+C. Program executed completely 
+D. None of them
+
+9. What is multithreaded programming?
+A. It’s a process in which two different processes run simultaneously. -- wrong
+B. It’s a process in which two or more parts of same process run simultaneously.
+C. Its a process in which many different process are able to access same information.--wrong
+D. Its a process in which a single process can access information from many sources.
+
+10. What is true about threads?
+A. Threads consumes CPU in best possible manner
+B. Threads enables multi processing. -- wrong
+C. Multi threading reduces idle time of CPU
+D. All of them -- wrong
+
+11. When a class extends the Thread class, it should override _______  method of Thread class to start that thread.
+A. start() -- correct
+B. run()
+C. init()
+D. go()
+
+12. What will be the output of the following program code?
+public class Test implements Runnable{
+       public static void main(String[] args){
+               Thread t = new Thread(this);
+               t.start();
+       }
+       public void run(){
+               System.out.println("test");
+       }
+}
+A. The program does not compile because this cannot be referenced in a static method. -- correct
+B. The program compiles fine, but it does not print anything because t does not invoke the run() method
+C. The program compiles and runs fine and displays test on the console.
+D. None of them
+
+13. What is valid about Executor service framework in java
+A. creates thread
+B. starts threads
+C. manages whole life cycle of Threads.
+D. All of them -- correct
+
+14. A thread can acquire a lock by using which reserved keyword?
+A. volatile
+B. locked
+C. synchronized -- correct
+D. threadLock
+
+15. Which three guarantee that a thread will leave the running state?
+A. yield()
+B. wait()
+C. notify()
+D. notifyAll()
+E. sleep(1000)
+F. aLiveThread.join()
+A. E,D and G
+B. A,C and D
+C. C,D and E
+D. B,E and F -- correct
+
+16. submit() method is defined in ________ interface and does not return result of computation.
+A. Callable
+B. Executor
+C. ExecutorService -- correct
+D. Runnable
+
+17. How can you ensure all threads that started from main must end in order in which they started and also main should end in last
+A. join() -- correct
+B. sleep()
+C. wait()
+D. run()
+
+18. synchronized instance methods acquire lock on?
+A. class
+B. method
+C. object -- correct
+D. variable
+
+19. What is deadlock in java?
+A. Deadlock is a situation where threads on different object are waiting for each other to release lock holded by them on resources -- wrong
+B. Deadlock is a situation where two threads on same object are waiting for each other to release lock holded by them on resources
+C. Both of the them -- wrong
+D. None of them
+
+20. What are key method of Lock interface?
+A. getLock()/ setLock() methods
+B. lock()/unLock() methods -- Correct
+C. setLock()/getUnLock() methods
+D. None of them

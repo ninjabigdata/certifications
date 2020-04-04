@@ -16,4 +16,62 @@ Basic Thread Synchronization
 		Thread interleaving
 	
 	Purpose of volatile keyword
-		
+
+Volatile vs Synchronized
+	Volatile syncs the value of one variable between thread memory and main memory
+	Synchronized syncs the value of all the variables between thread memory and main memory
+
+Thread Pools
+	Use ExecutorService to create thread pool of fixed size and execute the process as threads. If the number of threads created equals the size of the thread pool, it waits until one of the created threads completes its task and then it creates another theard thus re-using the thread space.
+	
+	shutdown()
+		This make sures no new thread will be created after this line.
+		This is async method does not wait for all the threads created before to complete the task.
+	
+	awaitTermination(time, timeunit)
+		This makes the main thread to wait until all the threads finish their tasks
+		This is a blocking method
+
+CountDown Latch
+	The object for this class is initialzed with count value
+	This makes the threads to wait till the count down reaches 0
+
+Producer Consumer
+	Using BlockingQueue
+	
+Wait and Notify
+	The wait() can be used only within the synchronized block. This makes the current thread to release the lock defined in th synchronized block.
+	
+	The notify() notifies the waiting thread on the same lock. Must be used only in synchronized block. This method does not releases the lock until the synchronized block is executed.
+	
+Reentrant Lock
+	This lock locks the resource by invoking lock() and releases the lock when unlock() is invoked. This doesnt not require synchronized block.
+	The unlock() will not be invoked if any exception occurs when accessing / processing shared resource. So, always use the shared resource access withing try block and unlock() in finally block
+	
+	Using wait and notify in Reentrant lock
+		This functionality is provided by Condition class.
+		Get Condition object from ReentrantLock object
+			Condition condition = reentrantLock.newCondition()
+		For wait, use condition.await()
+		For notify, use condition.signal()
+		These methods work similar to wait and notify. After signal(), the thread has to release the lock. So that waiting thread can acquire the lock.
+
+Deadlock
+	Always lock the resources in the same order
+	Acquire locks using a method. That method tries to acquire the locks. If all the locks are acquired, exist the method. If one or more lock is not acquired, unlock all the acquired locks and make the thread to sleep. Then redo the process till all the locks are acquired.
+	
+Semaphore
+	Semaphore specifies the amount the locks available.
+	The semaphore object is initialized with the number of locks available.
+	The release() releases the lock and increments the count by 1.
+	The acquire() acquires a lock if count is great than 0, else it waits till count is greater than 0. Upon acquiring the lock, the count will be reduced by 1.
+
+Callable and Future
+	The Callable interface is used for returning value from the thread and also exception thrown during execution thread
+	Implement the Callable interface in ExecutorService's submit method instead of implementing Runnable interface.
+	The return value from the submit() can be stored in Future object.
+	Using future object's get(), the value can be retrieved. The get() forces the thread to wait until execution of task in Callable interface implemention is completed
+
+Interrupted Exceptions
+	Invoking the interrupt() on the thread does not stop the process. Instead it updates the interrupted flag to true.
+	Either this interrupted flag can be checked before executing the process or make the current thread to sleep and break the thread process from catch block.
