@@ -16,5 +16,52 @@ Spring MVC
 			Plain Old Java Object
 		Bean
 			Spring Configured POJO
+	
+	Configuring controller for spring MVC
+		To get and return model from view and sending to view, use @ModelAttribute for the model object
+		To configuring the model in jsp:
+			Add the below taglib
+				<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+			Add the model to form using modelAttribute
+				<form:form modelAttribute="model">
+			To use the modelAttribute's attribute in jsp
+				<form:input path="name"/>
+	
+	Configuring project as war for deploying app on standalone server
+		Change the packaging as war in pom.xml
+			<packaging>war</packaging>
+		Extend the SpringBootServletInitializer class in Spring boot starter class
+	
+	Using java class for configuration instead of application.properties file
+		Create a class implementing WebMvcConfigurer interface. Annonate this class with @Configuration
+		Configure ViewResolver in Configuration class
+			Add bean for ViewResolver
+				Create object for InternalViewResolver
+					Add prefix, suffix and also order (integer) for resolving multiple views
+		Configuring static files
+			Override addResourceHandlers(ResourceHandlerRegistry registry)
+				Add the resourceHandler and resourceLocations to registry
+				Eg: registry.addResourceHandler("/files/**").addResourceLocations("/WEB-INF/pdf/")
+	
+	Interceptors
+		Intercepts the call to server and perform spl tasks on the call.
+		Eg: logging, security, I18N, performance monitoring
+	
+	Adding I18N to Spring MVC App
+		Changes to be done in configuration class
+			Create the following beans in Configuration class
+				LocaleResolver
+					Create an object of SessionLocaleResolver and set the default locale
+				LocaleChangeInterceptor
+					Create an object of LocaleChangeInterceptor and the parameter based on which locale has to be changed
+			Override the addInterceptors() and add the LocaleChangeInterceptor bean method to the InterceptoRegistry object (provided as input to addInterceptors())
+		In JSP
+			Add the taglib
+				<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+				
+	Handle POST-Redirect-GET
+		prefix redirect: to the view
+		Eg: redirect:registration
+			This redirects to get call of registration
 		
 	
