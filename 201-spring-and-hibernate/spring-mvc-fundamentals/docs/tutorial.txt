@@ -1,0 +1,20 @@
+Spring MVC
+	Teminologies
+		SPA
+			Single Page Application
+		Dispatcher Servlet
+			Entry Point
+		Controller
+			Command Pattern Handler
+		Request Mapping
+			URL and Request Type
+		View Resolver
+			Locates View to serve
+		servlet-config
+			Configuration file
+		POJO
+			Plain Old Java Object
+		Bean
+			Spring Configured POJO
+		
+	
