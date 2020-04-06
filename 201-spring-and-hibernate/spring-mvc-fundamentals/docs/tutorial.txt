@@ -130,4 +130,10 @@ Spring MVC
 					Add the validation message in messages bundle
 						Format: ValidationType.objectname.field
 							Eg: NotEmpty.registration.name
+							
+	Use RestController to Spring MVC
+		All the bean validation, I18N are valid here too
+		
+	Integrate JQuery
+		
 	
