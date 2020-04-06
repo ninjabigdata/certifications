@@ -93,3 +93,41 @@ Spring MVC
 				For mapping the modelAttribute value use text
 					<p th:text="${message}"></p>
 	
+	Bean Validation
+		was introduced in JSR 303, followed by 349 and 380
+		380 allows optional and typescript
+		
+		validator Interface
+			Older approach
+			But not deprecated
+			Business logic goes into layer
+		
+		Configuring Bean Validator
+			Add the hibernate-validator dependency
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+		
+		Validating ModelAttribute
+			Annonate the ModelAttribute with @Valid
+			Add the required validation in POJO
+				@NotEmpty (import from javax) --> Not empty validation
+			Add the BindingResult object to input parameters
+			Checking errors in BindingResult object (result)
+				Do this in controller
+					if (result.hasErrors()) {
+						return "registration";
+					}
+			To handle / show errors in validation
+				Add the form:errors inside form:from tag (1st line)
+					<form:errors path="*" cssClass="errorblock" element="div" />
+					
+			Customize Error Message 
+				For Field specific
+					Add the form:errors as before but specified the field name in path index of wildcard
+						<form:errors path="name" cssClass="error" element="p" />
+						
+				Add custom error message instead of default
+					Add the validation message in messages bundle
+						Format: ValidationType.objectname.field
+							Eg: NotEmpty.registration.name
+	

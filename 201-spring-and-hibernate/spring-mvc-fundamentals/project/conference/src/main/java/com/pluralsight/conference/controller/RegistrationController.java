@@ -1,6 +1,9 @@
 package com.pluralsight.conference.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +19,13 @@ public class RegistrationController {
 	}
 
 	@PostMapping("registration")
-	public String addregistration(@ModelAttribute("registration") Registration registration) {
+	public String addregistration(@Valid @ModelAttribute("registration") Registration registration,
+			BindingResult result) {
+		
+		if (result.hasErrors()) {
+			return "registration";
+		}
+		
 		System.out.println("Registration Name is " + registration.getName());
 		return "redirect:registration";
 	}
