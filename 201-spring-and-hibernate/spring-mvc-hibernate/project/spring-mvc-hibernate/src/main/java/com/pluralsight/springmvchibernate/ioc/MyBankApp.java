@@ -1,16 +1,24 @@
 package com.pluralsight.springmvchibernate.ioc;
 
-import com.pluralsight.springmvchibernate.ioc.account.Account;
-import com.pluralsight.springmvchibernate.ioc.account.CurrentAccount;
-import com.pluralsight.springmvchibernate.ioc.account.SavingAccount;
+import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.pluralsight.springmvchibernate.ioc.account.Account;
+
+@Component
 public class MyBankApp {
 
-	public static void main(String[] args) {
-		Account savingAccount = new SavingAccount();
+	@Autowired
+	private Account savingAccount;
+	@Autowired
+	private Account currentAccount;
+
+	@PostConstruct
+	public void postConstruct() {
 		System.out.println(savingAccount.createAccount());
 
-		Account currentAccount = new CurrentAccount();
 		System.out.println(currentAccount.createAccount());
 	}
 
