@@ -1,0 +1,42 @@
+Why Spring?
+	Simplifies java enterprise app development
+
+Goals of Spring
+	Light-weight development model
+	Loose coupling using DI
+	Declarative Prorgramming
+		AOP
+	Reduce boilerplate code
+
+Spring Architecture
+	Core Container
+		Core & Beans
+			IOC
+			DI
+		Context
+			Provides bean factory
+			Decouples the dependency from the biz logic
+			I18N support
+		Expression Language
+			For querying and manipulating object-graph at run-time
+			extn. of EL provided in JSP
+	Data Access / Integration
+		JDBC
+			Built-in support for JDBC
+		ORM
+			Integration for JPA
+		OXM
+			Abstraction for object/XML mapping using JAXB
+		JMS
+			Messages
+		Transactions
+			Database transactions
+	Web
+		Web Sockets
+		Web Servlets
+		Web Structs
+		Web Portal
+	AOP
+		Provides cross-cutting features
+	Test
+
