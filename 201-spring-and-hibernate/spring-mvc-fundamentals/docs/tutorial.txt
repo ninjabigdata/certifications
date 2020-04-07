@@ -135,5 +135,6 @@ Spring MVC
 		All the bean validation, I18N are valid here too
 		
 	Integrate JQuery
-		
+		Add js file to use ajax to hit REST API
+		Create HTML for displaying the data received from REST API
 	
