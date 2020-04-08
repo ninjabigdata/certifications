@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pluralsight.springmvchibernate.model.Account;
 
@@ -28,11 +27,7 @@ public class AccountController {
 	}
 
 	@PostMapping("/saveAccount")
-	public String saveAccount(Model model, @RequestParam("accountNo") Integer accountNumber,
-			@RequestParam("accountHolderName") String accountHolderName,
-			@RequestParam("accountBalance") Integer accountBalance) {
-
-		Account account = new Account(accountNumber, accountHolderName, accountBalance);
+	public String saveAccount(Model model, Account account) {
 		model.addAttribute("account", account);
 		return "showAccount";
 	}
