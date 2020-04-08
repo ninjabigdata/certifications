@@ -6,8 +6,8 @@
 </head>
 <body>
 	<h2>PS Bank: Account Details</h2>
-	<p>Account #: ${accountNo}</p>
-	<p>Account Holder Name : ${accountHolderName}</p>
-	<p>Account Balance: ${accountBalance}</p>
+	<p>Account #: ${account.accountNo}</p>
+	<p>Account Holder Name : ${account.accountHolderName}</p>
+	<p>Account Balance: ${account.accountBalance}</p>
 </body>
 </html>

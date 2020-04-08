@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.pluralsight.springmvchibernate.model.Account;
+
 @Controller
 public class AccountController {
 
@@ -28,13 +30,12 @@ public class AccountController {
 
 	@PostMapping("/saveAccount")
 	public String saveAccount(Model model, HttpServletRequest request) {
-		String accountNumber = request.getParameter("accountNo");
+		int accountNumber = Integer.parseInt(request.getParameter("accountNo"));
 		String accountHolderName = request.getParameter("accountHolderName");
-		String accountBalance = request.getParameter("accountBalance");
+		int accountBalance = Integer.parseInt(request.getParameter("accountBalance"));
 
-		model.addAttribute("accountNo", accountNumber);
-		model.addAttribute("accountHolderName", accountHolderName);
-		model.addAttribute("accountBalance", accountBalance);
+		Account account = new Account(accountNumber, accountHolderName, accountBalance);
+		model.addAttribute("account", account);
 		return "showAccount";
 	}
 
