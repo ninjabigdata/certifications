@@ -15,5 +15,8 @@
 	<a href="test/view">Test with view in URL</a>
 	<a href="test/name?userName=Balaji">User Name</a>
 	<a href="test/name">Without User Name</a>
+	<a href="test/dynamic/Balaji">With User Name (Path variable)</a>
+	<a href="test/dynamic/12">With Age (Path variable)</a>
+	<a href="test/w">Page Not Found</a>
 </body>
 </html>
