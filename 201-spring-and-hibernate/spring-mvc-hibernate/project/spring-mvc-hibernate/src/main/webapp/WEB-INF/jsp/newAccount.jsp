@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,25 +10,25 @@
 </head>
 <body>
 	<h2>Create New Account</h2>
-	<form name="accountForm" action="saveAccount" method="post">
+	<form:form modelAttribute="account" action="saveAccount">
 		<table>
 			<tr>
-				<td>Account #:</td>
-				<td><input type="text" name="accountNo"></td>
+				<td><spring:message code="lbl.accountNo" />: </td>
+				<td><form:input type="text" path="accountNo" size="30" /></td>
 			</tr>
 			<tr>
-				<td>Account Holder Name:</td>
-				<td><input type="text" name="accountHolderName"></td>
+				<td><spring:message code="lbl.accountHolderName" />: </td>
+				<td><form:input type="text" path="accountHolderName" size="30" /></td>
 			</tr>
 			<tr>
-				<td>Account Balance:</td>
-				<td><input type="text" name="accountBalance"></td>
+				<td><spring:message code="lbl.accountBalance" />: </td>
+				<td><form:input type="text" path="accountBalance" size="30" /></td>
 			</tr>
 			<tr>
 				<td colspan="2" align="center"><input type="submit"
 					value="Create Account" name="btnSubmit"></td>
 			</tr>
 		</table>
-	</form>
+	</form:form>
 </body>
 </html>
