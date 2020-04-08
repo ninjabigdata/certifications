@@ -40,3 +40,24 @@ Spring Architecture
 		Provides cross-cutting features
 	Test
 
+IoC
+	Design process of externalizing the construction and management of your objects
+
+Tag Library
+	Provided by spring to construct views
+	Advantages over HTML tags
+		Support data bindings with POJO and also bean
+		Configurable
+		Easier to develop and maintain JSP pages
+		Comes along with spring MVC
+	Adding Spring forms to JSP
+		<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+	Spring Tags
+		form
+		input
+		checkboxes
+		radiobutton
+		select & option
+		textarea
+		hidden
+		errors
