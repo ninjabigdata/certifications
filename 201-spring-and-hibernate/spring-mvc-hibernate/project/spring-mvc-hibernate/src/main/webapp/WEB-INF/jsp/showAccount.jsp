@@ -11,7 +11,7 @@
 <body>
 	<h2><spring:message code="lbl.title" /></h2>
 	<p><spring:message code="lbl.accountNo" />: ${account.accountNo}</p>
-	<p><spring:message code="lbl.accountNo" /> : ${account.accountHolderName}</p>
+	<p><spring:message code="lbl.accountHolderName" /> : ${account.accountHolderName}</p>
 	<p><spring:message code="lbl.accountBalance" />: ${account.accountBalance}</p>
 </body>
 </html>

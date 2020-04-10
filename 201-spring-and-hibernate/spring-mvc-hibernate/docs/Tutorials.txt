@@ -61,3 +61,22 @@ Tag Library
 		textarea
 		hidden
 		errors
+
+JSR Validation
+	Custom Validation
+		1. Create Annotation
+			@Constraint(validatedBy = <ValidationClassName>.class)
+			@Target({ElementType.METHOD, ElementType.FIELD})
+			@Retention(RetentionPolicy.RUNTIME)
+			public @interface AnnotationName {
+			
+			}
+		2. Create Validation Class
+			public class ValidatorClass implements ConstraintValidator<AnnotationName, DateType> {
+				@Override
+				public Boolean isvalid(...) {
+					// Write custome rules
+				}
+			}
+		3. Add the custom annotation to method or field
+		4. Update the view to display error
