@@ -80,3 +80,11 @@ JSR Validation
 			}
 		3. Add the custom annotation to method or field
 		4. Update the view to display error
+
+Hibernate
+	Object Relational Mapping Tool for Java
+	
+	Benefits
+		Object-relational impedance mismatch
+		Handles low level SQLs for mapping to object and vice versa
+		Reduces JDBC code for DB interaction

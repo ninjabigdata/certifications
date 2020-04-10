@@ -50,11 +50,11 @@ public class Account {
 		this.accountBalance = accountBalance;
 	}
 
-	public int getAccountNo() {
+	public Integer getAccountNo() {
 		return accountNo;
 	}
 
-	public void setAccountNo(int accountNo) {
+	public void setAccountNo(Integer accountNo) {
 		this.accountNo = accountNo;
 	}
 
@@ -66,11 +66,11 @@ public class Account {
 		this.accountHolderName = accountHolderName;
 	}
 
-	public int getAccountBalance() {
+	public Integer getAccountBalance() {
 		return accountBalance;
 	}
 
-	public void setAccountBalance(int accountBalance) {
+	public void setAccountBalance(Integer accountBalance) {
 		this.accountBalance = accountBalance;
 	}
 
