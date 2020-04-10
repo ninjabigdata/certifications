@@ -30,6 +30,7 @@ public class AccountService {
 
 			accountRepository.save(accountEntity);
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			isSaved = false;
 		}
 

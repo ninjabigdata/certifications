@@ -20,7 +20,7 @@
 			<tr>
 				<td><spring:message code="lbl.accountNo" />:</td>
 				<td><form:input path="accountNo" /> <form:errors
-						path="accountNo" cssClass="error" /></td>
+						path="accountNo" cssClass="error" /><b class="error">${message}</b></td>
 			</tr>
 			<tr>
 				<td><spring:message code="lbl.accountHolderName" />:</td>

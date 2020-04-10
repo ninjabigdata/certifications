@@ -7,6 +7,7 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -40,11 +41,16 @@ public class AccountController {
 	}
 
 	@PostMapping("/saveAccount")
-	public String saveAccount(@Valid @ModelAttribute("account") Account account, BindingResult result) {
+	public String saveAccount(@Valid @ModelAttribute("account") Account account, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			return "newAccount";
 		} else {
-			accountService.saveAccount(account);
+			try {
+				accountService.saveAccount(account);
+			} catch (Exception e) {
+				model.addAttribute("message", "Account number already exists");
+				return "newAccount";
+			}
 			return "redirect:list";
 		}
 	}

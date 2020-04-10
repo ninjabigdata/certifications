@@ -88,3 +88,24 @@ Hibernate
 		Object-relational impedance mismatch
 		Handles low level SQLs for mapping to object and vice versa
 		Reduces JDBC code for DB interaction
+		
+AOP
+	Spring AOP
+		Merits
+			Very easy to use
+			Uses proxy pattern
+			Easy to migrate from Spring AOP to AspectJ
+		Demerits
+			Supports only method level join points
+			Supports only objects created using Spring App Context
+			Performance is slow
+	AspectJ
+		Merits
+			Supports all the Join points
+				Method, constructor, field
+			can be used with any POJO
+			Performance is faster than Spring AOP
+			Provides full implementation of AOP Specs
+		Demerits
+			Compile time weaving requires extra step
+			Pointcut syntax is complex
