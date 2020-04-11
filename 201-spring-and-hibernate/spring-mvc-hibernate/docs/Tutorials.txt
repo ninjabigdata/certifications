@@ -109,3 +109,9 @@ AOP
 		Demerits
 			Compile time weaving requires extra step
 			Pointcut syntax is complex
+
+Securing Web-App using Spring-Security
+	Spring Security
+		Flexible and powerful auth and access control framework to secure Spring based web apps
+		Provides a set of servlet filters to perform various kinds of security services for web apps
+		
