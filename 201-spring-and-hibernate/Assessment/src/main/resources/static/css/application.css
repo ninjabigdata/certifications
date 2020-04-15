@@ -1,0 +1,46 @@
+@charset "ISO-8859-1";
+
+.container {
+	margin: auto;
+	width: 900px;
+	background-color: whitesmoke;
+	padding: 10px 10px 20px 10px;
+}
+
+.btn {
+	text-decoration: none;
+	border: 1px solid white;
+	background-color: blue;
+	color: white;
+	padding: 2px 8px 2px 8px;
+	height: 23px;
+	cursor: pointer;
+}
+
+.form-table {
+	border-spacing: 6px;
+}
+
+.drop-down {
+	min-width: 100px;
+}
+
+.error {
+	display: inline !important;
+	color: red;
+}
+
+#report {
+	text-align: center;
+}
+
+#report table {
+	border-collapse: collapse;
+	padding: 5px;
+	text-align: left;
+	margin: auto;
+}
+
+#report table, #report th, #report td {
+	border: 1px solid black;
+}

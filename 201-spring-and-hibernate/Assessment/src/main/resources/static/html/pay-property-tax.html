@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Self Assessment Form</title>
+<link rel="stylesheet" href="/css/application.css">
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/pay-property-tax.js"></script>
+</head>
+<body>
+	<div class="container">
+		<header>
+			<h1>Self Assessment of Property Tax Form</h1>
+		</header>
+		<br />
+		<div>
+			<form id="selfAssessmentForm">
+				<table class="form-table">
+					<tr>
+						<td>Year of Assessment</td>
+						<td><input id="assessmentYear" type="number" maxlength="4"
+							name="assessmentYear">
+							<p name="assessmentYear" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Name of the Owner</td>
+						<td><input id="ownerName" type="text" name="ownerName">
+							<p name="ownerName" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Email</td>
+						<td><input id="email" type="email" name="email">
+							<p name="email" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Address of Property</td>
+						<td><textarea id="propertyAddress" rows="5" cols="50"
+								name="propertyAddress"></textarea>
+							<p name="propertyAddress" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Zonal Classification</td>
+						<td><select id="zone" class="drop-down" name="zone">
+						</select>
+							<p name="zone" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Description of the Property</td>
+						<td><select id="category" class="drop-down" name="category">
+						</select>
+							<p name="category" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Status</td>
+						<td><select id="status" class="drop-down" name="status">
+								<option>Select</option>
+								<option value="1">Tenanted</option>
+								<option value="2">Owner</option>
+						</select>
+							<p name="status" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Building constructed year</td>
+						<td><input id="buildingConstructedYear" type="number"
+							maxlength="4" name="buildingConstructedYear">
+							<p name="buildingConstructedYear" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Build up area (Square feet)</td>
+						<td><input id="buildUpArea" type="number" name="buildUpArea">
+							<p name="buildUpArea" class="error"></p></td>
+					</tr>
+					<tr>
+						<td>Total Tax Payable</td>
+						<td><input id="taxPayable" readonly="readonly" type="number"
+							name="taxPayable">[Computation from details provided
+							above]
+							<p name="taxPayable" class="error"></p></td>
+					</tr>
+					<tr>
+						<td><a class="btn" href="/">Cancel</a></td>
+						<td><input id="payTax" class="btn" type="submit"
+							value="Pay Tax"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
