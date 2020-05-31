@@ -18,8 +18,12 @@ import org.mindtree.com.assessment.repository.UnitAreaValueRespository;
 import org.mindtree.com.assessment.repository.ZoneRepository;
 import org.mindtree.com.assessment.repository.projection.CategoryByZone;
 import org.mindtree.com.assessment.service.MasterDataService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The implementation class of {@link MasterDataService}
@@ -30,6 +34,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MasterDataServcieImpl implements MasterDataService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private StatusRepository statusRepository;
 	@Autowired
@@ -39,11 +45,14 @@ public class MasterDataServcieImpl implements MasterDataService {
 	@Autowired
 	private UnitAreaValueRespository uavRespository;
 
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<MasterDataDTO> getStatuses() throws ApplicationException {
 		List<Status> statuses = statusRepository.findAll();
 
 		if (statuses.isEmpty()) {
+			logger.error(ExceptionCodes.MDS_STATUS_NOT_FOUND);
+
 			throw new ApplicationException(ExceptionCodes.MDS_STATUS_NOT_FOUND);
 		}
 
@@ -56,11 +65,14 @@ public class MasterDataServcieImpl implements MasterDataService {
 		}).collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<MasterDataDTO> getZones() throws ApplicationException {
 		List<Zone> zones = zoneRepository.findAll();
 
 		if (zones.isEmpty()) {
+			logger.error(ExceptionCodes.MDS_ZONE_NOT_FOUND);
+
 			throw new ApplicationException(ExceptionCodes.MDS_ZONE_NOT_FOUND);
 		}
 
@@ -73,11 +85,14 @@ public class MasterDataServcieImpl implements MasterDataService {
 		}).collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<MasterDataDTO> getResidentialPropertyCategories() throws ApplicationException {
 		List<ResidentialPropertyCategory> categories = categoryRepository.findAll();
 
 		if (categories.isEmpty()) {
+			logger.error(ExceptionCodes.MDS_CATEGORY_NOT_FOUND);
+
 			throw new ApplicationException(ExceptionCodes.MDS_CATEGORY_NOT_FOUND);
 		}
 
@@ -90,11 +105,14 @@ public class MasterDataServcieImpl implements MasterDataService {
 		}).collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<MasterDataDTO> getResidentialPropertyCategoriesByZone(int zoneId) throws ApplicationException {
 		List<CategoryByZone> categories = uavRespository.findDistinctByZoneIdOrderByCategoryId(zoneId);
 
 		if (categories.isEmpty()) {
+			logger.error(ExceptionCodes.MDS_CATEGORY_NOT_FOUND_FOR_ZONE);
+
 			throw new ApplicationException(ExceptionCodes.MDS_CATEGORY_NOT_FOUND_FOR_ZONE);
 		}
 

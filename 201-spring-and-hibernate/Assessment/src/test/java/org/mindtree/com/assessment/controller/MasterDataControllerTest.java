@@ -51,10 +51,8 @@ public class MasterDataControllerTest {
 		mockMvc = MockMvcBuilders.standaloneSetup(masterDataController).build();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetZones() throws Exception {
-		// Positive Flow
+	public void testGetZonesSuccess() throws Exception {
 		List<MasterDataDTO> expectedZones = new ArrayList<>();
 		MasterDataDTO zone = new MasterDataDTO();
 		zone.setCode("Zone A");
@@ -79,7 +77,11 @@ public class MasterDataControllerTest {
 			fail();
 		}
 
-		// Exception Flow
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetZonesException() throws Exception {
 		try {
 			doThrow(new ApplicationException(ExceptionCodes.MDS_ZONE_NOT_FOUND)).when(masterDataService).getZones();
 
@@ -99,10 +101,8 @@ public class MasterDataControllerTest {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetStatuses() throws Exception {
-		// Positive Flow
+	public void testGetStatusesSucess() throws Exception {
 		List<MasterDataDTO> expectedStatuses = new ArrayList<>();
 		MasterDataDTO status = new MasterDataDTO();
 		status.setCode("Owned");
@@ -127,7 +127,11 @@ public class MasterDataControllerTest {
 			fail();
 		}
 
-		// Exception Flow
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetStatusesNegative() throws Exception {
 		try {
 			doThrow(new ApplicationException(ExceptionCodes.MDS_STATUS_NOT_FOUND)).when(masterDataService)
 					.getStatuses();
@@ -148,11 +152,8 @@ public class MasterDataControllerTest {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetCategories() throws Exception {
-		// Positive Flow
-		// Without Zone
+	public void testGetCategoriesWithoutZoneSuccess() throws Exception {
 		List<MasterDataDTO> expectedCategories = new ArrayList<>();
 		MasterDataDTO status = new MasterDataDTO();
 		status.setCode("RCC");
@@ -176,8 +177,20 @@ public class MasterDataControllerTest {
 		} catch (ApplicationException e) {
 			fail();
 		}
+	}
 
-		// Without Zone
+	@Test
+	public void testGetCategoriesWithZoneSucces() throws Exception {
+		List<MasterDataDTO> expectedCategories = new ArrayList<>();
+		MasterDataDTO status = new MasterDataDTO();
+		status.setCode("RCC");
+		status.setId(1);
+		expectedCategories.add(status);
+		status = new MasterDataDTO();
+		status.setCode("Roofed");
+		status.setId(2);
+		expectedCategories.add(status);
+
 		try {
 			doReturn(expectedCategories).when(masterDataService).getResidentialPropertyCategoriesByZone(1);
 
@@ -195,8 +208,11 @@ public class MasterDataControllerTest {
 			fail();
 		}
 
-		// Exception Flow
-		// Without Zone
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetCategoriesWithoutZoneException() throws Exception {
 		try {
 			doThrow(new ApplicationException(ExceptionCodes.MDS_CATEGORY_NOT_FOUND)).when(masterDataService)
 					.getResidentialPropertyCategories();
@@ -215,7 +231,11 @@ public class MasterDataControllerTest {
 			fail();
 		}
 
-		// With Zone
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetCategoriesWithZoneException() throws Exception {
 		try {
 			doThrow(new ApplicationException(ExceptionCodes.MDS_CATEGORY_NOT_FOUND_FOR_ZONE)).when(masterDataService)
 					.getResidentialPropertyCategoriesByZone(1);

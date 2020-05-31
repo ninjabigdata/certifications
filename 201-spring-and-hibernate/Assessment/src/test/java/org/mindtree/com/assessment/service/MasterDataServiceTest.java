@@ -44,8 +44,7 @@ public class MasterDataServiceTest {
 	private UnitAreaValueRespository uavRespository;
 
 	@Test
-	public void testGetStatues() {
-		// Positive Flow
+	public void testGetStatuesSuccess() {
 		List<Status> statues = new ArrayList<>();
 		Status status = new Status();
 		status.setId(1);
@@ -69,8 +68,10 @@ public class MasterDataServiceTest {
 		} catch (ApplicationException e) {
 			fail();
 		}
+	}
 
-		// Exception Flow
+	@Test
+	public void testGetStatuesException() {
 		doReturn(Collections.EMPTY_LIST).when(statusRepository).findAll();
 
 		try {
@@ -82,8 +83,7 @@ public class MasterDataServiceTest {
 	}
 
 	@Test
-	public void testGetZones() {
-		// Positive Flow
+	public void testGetZonesSuccess() {
 		List<Zone> zones = new ArrayList<>();
 		Zone zone = new Zone();
 		zone.setId(1);
@@ -107,8 +107,10 @@ public class MasterDataServiceTest {
 		} catch (ApplicationException e) {
 			fail();
 		}
+	}
 
-		// Exception Flow
+	@Test
+	public void testGetZonesException() {
 		doReturn(Collections.EMPTY_LIST).when(zoneRepository).findAll();
 
 		try {
@@ -120,8 +122,7 @@ public class MasterDataServiceTest {
 	}
 
 	@Test
-	public void testGetResidentialPropertyCategories() {
-		// Positive Flow
+	public void testGetResidentialPropertyCategoriesSuccess() {
 		List<ResidentialPropertyCategory> categories = new ArrayList<>();
 		ResidentialPropertyCategory category = new ResidentialPropertyCategory();
 		category.setId(1);
@@ -148,7 +149,10 @@ public class MasterDataServiceTest {
 			fail();
 		}
 
-		// Exception Flow
+	}
+
+	@Test
+	public void testGetResidentialPropertyCategoriesException() {
 		doReturn(Collections.EMPTY_LIST).when(categoryRepository).findAll();
 
 		try {
@@ -160,8 +164,7 @@ public class MasterDataServiceTest {
 	}
 
 	@Test
-	public void testGetResidentialPropertyCategoriesByZone() {
-		// Positive Flow
+	public void testGetResidentialPropertyCategoriesByZoneSuccess() {
 		List<CategoryByZone> categories = new ArrayList<>();
 		ResidentialPropertyCategory category = new ResidentialPropertyCategory();
 		category.setId(1);
@@ -193,7 +196,10 @@ public class MasterDataServiceTest {
 			fail();
 		}
 
-		// Exception Flow
+	}
+
+	@Test
+	public void testGetResidentialPropertyCategoriesByZoneException() {
 		doReturn(Collections.EMPTY_LIST).when(uavRespository).findDistinctByZoneIdOrderByCategoryId(2);
 
 		try {

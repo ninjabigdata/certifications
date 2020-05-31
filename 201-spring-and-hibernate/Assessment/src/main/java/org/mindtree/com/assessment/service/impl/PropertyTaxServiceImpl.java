@@ -20,8 +20,13 @@ import org.mindtree.com.assessment.repository.UnitAreaValueRespository;
 import org.mindtree.com.assessment.repository.ZoneRepository;
 import org.mindtree.com.assessment.repository.projection.ZonalWiseReport;
 import org.mindtree.com.assessment.service.PropertyTaxService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The implementation class of {@link PropertyTaxService}
@@ -31,6 +36,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PropertyTaxServiceImpl implements PropertyTaxService {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private UnitAreaValueRespository unitAreaValueRespository;
@@ -49,21 +56,29 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 
 		// Validate email
 		if (!propertyDetailsDTO.getEmail().matches(ApplicationConstants.EMAIL_PATTERN)) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_EMAIL);
+
 			errors.put(ApplicationConstants.EMAIL, ExceptionCodes.PTS_VALIDATION_INVALID_EMAIL);
 		}
 
 		// valid zone id
 		if (!zoneRepository.existsById(propertyDetailsDTO.getZone())) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_ZONE);
+
 			errors.put(ApplicationConstants.ZONE, ExceptionCodes.PTS_VALIDATION_INVALID_ZONE);
 		}
 
 		// valid category id
 		if (!categoryRepository.existsById(propertyDetailsDTO.getCategory())) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_CATEGORY);
+
 			errors.put(ApplicationConstants.CATEGORY, ExceptionCodes.PTS_VALIDATION_INVALID_CATEGORY);
 		}
 
 		// valid status id
 		if (!statusRepository.existsById(propertyDetailsDTO.getStatus())) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_STATUS);
+
 			errors.put(ApplicationConstants.STATUS, ExceptionCodes.PTS_VALIDATION_INVALID_STATUS);
 		}
 
@@ -71,6 +86,9 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 		int buildingAge = propertyDetailsDTO.getAssessmentYear() - propertyDetailsDTO.getBuildingConstructedYear();
 
 		if (buildingAge < 0) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_CONSTRUCTED_YEAR_GREATER);
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_ASSESSMENT_YEAR_LESS);
+
 			errors.put(ApplicationConstants.BUILDING_CONSTRUCTED_YEAR,
 					ExceptionCodes.PTS_VALIDATION_INVALID_CONSTRUCTED_YEAR_GREATER);
 			errors.put(ApplicationConstants.ASSESSMENT_YEAR,
@@ -80,6 +98,8 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 		}
 
 		if (!errors.isEmpty()) {
+			logger.error(errors.toString());
+
 			throw new ApplicationException(errors);
 		}
 
@@ -88,6 +108,8 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 				propertyDetailsDTO.getCategory(), propertyDetailsDTO.getZone(), propertyDetailsDTO.getStatus());
 
 		if (uav == null) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_INVALID_COMBO_FOR_TAX);
+
 			errors.put(ApplicationConstants.TAX_PAYABLE, ExceptionCodes.PTS_VALIDATION_INVALID_COMBO_FOR_TAX);
 
 			throw new ApplicationException(errors);
@@ -105,11 +127,14 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 		return Math.round((total3 + total4) * 100.0) / 100.0;
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void savePropertyTax(PropertyDetailsDTO propertyDetailsDTO) throws ApplicationException {
 		Double updatedTax = calculatePropertyTax(propertyDetailsDTO);
 
 		if (updatedTax.compareTo(propertyDetailsDTO.getTaxPayable()) != 0) {
+			logger.error(ExceptionCodes.PTS_VALIDATION_RECALCULATE_TAX);
+
 			throw new ApplicationException(ExceptionCodes.PTS_VALIDATION_RECALCULATE_TAX);
 		}
 
@@ -129,6 +154,7 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 
 	}
 
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<ZonalWiseReportDTO> generateZonalWiseReport() throws ApplicationException {
 		List<ZonalWiseReportDTO> report = new ArrayList<>();
@@ -136,6 +162,8 @@ public class PropertyTaxServiceImpl implements PropertyTaxService {
 		List<ZonalWiseReport> zonalWiseReport = taxPaymentRepository.getZoneWiseReport();
 
 		if (zonalWiseReport.isEmpty()) {
+			logger.error(ExceptionCodes.PTS_REPORT_NO_DATA);
+
 			throw new ApplicationException(ExceptionCodes.PTS_REPORT_NO_DATA);
 		}
 

@@ -10,6 +10,8 @@ import org.mindtree.com.assessment.constants.ApplicationConstants;
 import org.mindtree.com.assessment.dto.ResponseDTO;
 import org.mindtree.com.assessment.exception.ApplicationException;
 import org.mindtree.com.assessment.service.MasterDataService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/master-data")
 public class MasterDataController {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private MasterDataService masterDataService;
@@ -49,6 +53,8 @@ public class MasterDataController {
 
 			responseDTO.setErrors(errors);
 			responseDTO.setStatus(FAILURE);
+			
+			logger.error(errors.toString());
 		}
 
 		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
@@ -72,6 +78,8 @@ public class MasterDataController {
 
 			responseDTO.setErrors(errors);
 			responseDTO.setStatus(FAILURE);
+			
+			logger.error(errors.toString());
 		}
 
 		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
@@ -99,6 +107,8 @@ public class MasterDataController {
 
 			responseDTO.setErrors(errors);
 			responseDTO.setStatus(FAILURE);
+			
+			logger.error(errors.toString());
 		}
 
 		return new ResponseEntity<>(responseDTO, HttpStatus.OK);

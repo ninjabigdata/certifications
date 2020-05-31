@@ -55,9 +55,8 @@ public class PropertyTaxControllerTest {
 		mockMvc = MockMvcBuilders.standaloneSetup(propertyTaxController).build();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void testCalculatePropertyTax() throws Exception {
+	public void testCalculatePropertyTaxSuccess() throws Exception {
 		// Positive Flow
 		PropertyDetailsDTO validPropertyDetails = new PropertyDetailsDTO();
 		validPropertyDetails.setAssessmentYear(2020);
@@ -87,7 +86,11 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
-		// Exception Flows
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testCalculatePropertyTaxExceptionInvalidData() throws Exception {
 		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(-2020);
 		invalidPropertyDetails.setOwnerName("owner");
@@ -124,6 +127,11 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testCalculatePropertyTaxExceptionEmptyData() throws Exception {
 		try {
 			ResponseDTO response = MAPPER.readValue(mockMvc
 					.perform(MockMvcRequestBuilders.post("/property-tax/calculator").content("{}")
@@ -161,7 +169,12 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
-		invalidPropertyDetails = new PropertyDetailsDTO();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testCalculatePropertyTaxInvalidYears() throws Exception {
+		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(2000);
 		invalidPropertyDetails.setOwnerName("owner");
 		invalidPropertyDetails.setEmail("owner@own.co");
@@ -218,10 +231,8 @@ public class PropertyTaxControllerTest {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void testPayPropertyTax() throws Exception {
-		// Positive Flow
+	public void testPayPropertyTaxSuccess() throws Exception {
 		PropertyDetailsDTO validPropertyDetails = new PropertyDetailsDTO();
 		validPropertyDetails.setAssessmentYear(2020);
 		validPropertyDetails.setOwnerName("owner");
@@ -250,7 +261,11 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
-		// Exception Flows
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testPayPropertyTaxExceptionInvalidData() throws Exception {
 		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(-2020);
 		invalidPropertyDetails.setOwnerName("owner");
@@ -286,7 +301,11 @@ public class PropertyTaxControllerTest {
 		} catch (ApplicationException e) {
 			fail();
 		}
+	}
 
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testPayPropertyTaxExceptionEmptyData() throws Exception {
 		try {
 			ResponseDTO response = MAPPER.readValue(mockMvc
 					.perform(MockMvcRequestBuilders.post("/property-tax/payment").content("{}")
@@ -324,7 +343,12 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
-		invalidPropertyDetails = new PropertyDetailsDTO();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testPayPropertyTaxExceptionInvalidYears() throws Exception {
+		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(2000);
 		invalidPropertyDetails.setOwnerName("owner");
 		invalidPropertyDetails.setEmail("owner@own.co");
@@ -379,7 +403,12 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
-		invalidPropertyDetails = new PropertyDetailsDTO();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testPayPropertyTaxExceptionInvalidTax() throws Exception {
+		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(2020);
 		invalidPropertyDetails.setOwnerName("owner");
 		invalidPropertyDetails.setEmail("owner@own.co");
@@ -389,7 +418,7 @@ public class PropertyTaxControllerTest {
 		invalidPropertyDetails.setStatus(1);
 		invalidPropertyDetails.setBuildingConstructedYear(2002);
 		invalidPropertyDetails.setBuildUpArea(980);
-		validPropertyDetails.setTaxPayable(9964.6);
+		invalidPropertyDetails.setTaxPayable(9964.6);
 
 		try {
 			doThrow(new ApplicationException(ExceptionCodes.PTS_VALIDATION_RECALCULATE_TAX)).when(propertyTaxService)
@@ -415,10 +444,8 @@ public class PropertyTaxControllerTest {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void testGenerateZonalWiseReport() throws Exception {
-		// Positive Flow
+	public void testGenerateZonalWiseReportSuccess() throws Exception {
 		try {
 			List<ZonalWiseReportDTO> zonalWiseReportDTOs = new ArrayList<>();
 			ZonalWiseReportDTO zonalWiseReportDTO = new ZonalWiseReportDTO();
@@ -441,7 +468,11 @@ public class PropertyTaxControllerTest {
 			fail();
 		}
 
-		// Exception Flows
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGenerateZonalWiseReportException() throws Exception {
 		try {
 			doThrow(new ApplicationException(ExceptionCodes.PTS_REPORT_NO_DATA)).when(propertyTaxService)
 					.generateZonalWiseReport();

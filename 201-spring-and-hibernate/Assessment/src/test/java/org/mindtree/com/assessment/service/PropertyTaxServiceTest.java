@@ -54,18 +54,8 @@ public class PropertyTaxServiceTest {
 	private PropertyTaxPaymentRepository taxPaymentRepository;
 
 	@Test
-	public void testCalculatePropertyTax() {
-		// Positive Flow
-		PropertyDetailsDTO validPropertyDetails = new PropertyDetailsDTO();
-		validPropertyDetails.setAssessmentYear(2020);
-		validPropertyDetails.setOwnerName("owner");
-		validPropertyDetails.setEmail("owner@own.co");
-		validPropertyDetails.setPropertyAddress("address");
-		validPropertyDetails.setZone(1);
-		validPropertyDetails.setCategory(1);
-		validPropertyDetails.setStatus(1);
-		validPropertyDetails.setBuildingConstructedYear(2002);
-		validPropertyDetails.setBuildUpArea(980);
+	public void testCalculatePropertyTaxSuccessBuildingAgeBelow60() {
+		PropertyDetailsDTO validPropertyDetails = getValidPropertiesDetailsDTO();
 
 		UnitAreaValueBreakup uav = new UnitAreaValueBreakup();
 		uav.setUnitAreaValue(5.00);
@@ -80,29 +70,61 @@ public class PropertyTaxServiceTest {
 		} catch (ApplicationException exception) {
 			fail();
 		}
-		
-		// For applicable appreciation, age greater than 60 years
+	}
+
+	@Test
+	public void testCalculatePropertyTaxSuccessBuildingAgeAbove60() {
+		PropertyDetailsDTO validPropertyDetails = getValidPropertiesDetailsDTO();
 		validPropertyDetails.setBuildingConstructedYear(1959);
+
+		UnitAreaValueBreakup uav = new UnitAreaValueBreakup();
+		uav.setUnitAreaValue(5.00);
+
+		doReturn(true).when(zoneRepository).existsById(1);
+		doReturn(true).when(categoryRepository).existsById(1);
+		doReturn(true).when(statusRepository).existsById(1);
+		doReturn(uav).when(uavRespository).findByCategoryIdAndZoneIdAndStatusId(1, 1, 1);
 
 		try {
 			assertNotNull(propertyTaxServiceImpl.calculatePropertyTax(validPropertyDetails));
 		} catch (ApplicationException exception) {
 			fail();
 		}
+	}
 
-		// Exception Flows
-		// Invalid Combination to get UAV
+	private PropertyDetailsDTO getValidPropertiesDetailsDTO() {
+		PropertyDetailsDTO validPropertyDetails = new PropertyDetailsDTO();
+		validPropertyDetails.setAssessmentYear(2020);
+		validPropertyDetails.setOwnerName("owner");
+		validPropertyDetails.setEmail("owner@own.co");
+		validPropertyDetails.setPropertyAddress("address");
+		validPropertyDetails.setZone(1);
+		validPropertyDetails.setCategory(1);
+		validPropertyDetails.setStatus(1);
+		validPropertyDetails.setBuildingConstructedYear(2002);
+		validPropertyDetails.setBuildUpArea(980);
+		return validPropertyDetails;
+	}
+
+	@Test
+	public void testCalculatePropertyTaxExceptionInvalidUAVForTaxComputation() {
+		doReturn(true).when(zoneRepository).existsById(1);
+		doReturn(true).when(categoryRepository).existsById(1);
+		doReturn(true).when(statusRepository).existsById(1);
 		doReturn(null).when(uavRespository).findByCategoryIdAndZoneIdAndStatusId(1, 1, 1);
 
 		try {
-			propertyTaxServiceImpl.calculatePropertyTax(validPropertyDetails);
+			propertyTaxServiceImpl.calculatePropertyTax(getValidPropertiesDetailsDTO());
 		} catch (ApplicationException exception) {
 			assertEquals(1, exception.getErrors().size());
 			assertEquals(ExceptionCodes.PTS_VALIDATION_INVALID_COMBO_FOR_TAX,
 					exception.getErrors().get(ApplicationConstants.TAX_PAYABLE));
 		}
 
-		// Other validation errors
+	}
+
+	@Test
+	public void testCalculatePropertyTaxExceptionFieldValidations() {
 		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(2000);
 		invalidPropertyDetails.setOwnerName("owner");
@@ -139,18 +161,8 @@ public class PropertyTaxServiceTest {
 	}
 
 	@Test
-	public void testSavePropertyTax() {
-		// Positive Flow
-		PropertyDetailsDTO validPropertyDetails = new PropertyDetailsDTO();
-		validPropertyDetails.setAssessmentYear(2020);
-		validPropertyDetails.setOwnerName("owner");
-		validPropertyDetails.setEmail("owner@own.co");
-		validPropertyDetails.setPropertyAddress("address");
-		validPropertyDetails.setZone(1);
-		validPropertyDetails.setCategory(1);
-		validPropertyDetails.setStatus(1);
-		validPropertyDetails.setBuildingConstructedYear(2002);
-		validPropertyDetails.setBuildUpArea(980);
+	public void testSavePropertyTaxSuccess() {
+		PropertyDetailsDTO validPropertyDetails = getValidPropertiesDetailsDTO();
 		validPropertyDetails.setTaxPayable(9964.64);
 
 		UnitAreaValueBreakup uav = new UnitAreaValueBreakup();
@@ -167,7 +179,10 @@ public class PropertyTaxServiceTest {
 			fail();
 		}
 
-		// Exception Flow
+	}
+
+	@Test
+	public void testSavePropertyTaxExceptionInvalidComputedTax() {
 		PropertyDetailsDTO invalidPropertyDetails = new PropertyDetailsDTO();
 		invalidPropertyDetails.setAssessmentYear(2020);
 		invalidPropertyDetails.setOwnerName("owner");
@@ -191,7 +206,7 @@ public class PropertyTaxServiceTest {
 	}
 
 	@Test
-	public void testGenerateZonalWiseReport() {
+	public void testGenerateZonalWiseReportSuccess() {
 		// Positive Flow
 		List<ZonalWiseReport> zonalWiseReports = new ArrayList<>();
 		zonalWiseReports.add(new ZonalWiseReport() {
@@ -264,7 +279,10 @@ public class PropertyTaxServiceTest {
 			fail();
 		}
 
-		// Exception Flow
+	}
+
+	@Test
+	public void testGenerateZonalWiseReportException() {
 		doReturn(Collections.EMPTY_LIST).when(taxPaymentRepository).getZoneWiseReport();
 
 		try {

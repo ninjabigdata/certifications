@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "property_tax_payment")
-public class PropertyTaxPayment {
+public class PropertyTaxPayment implements Comparable<PropertyTaxPayment> {
 
 	/**
 	 * Auto-generated Id. Primary Key field
@@ -261,6 +261,110 @@ public class PropertyTaxPayment {
 	 */
 	public void setUav(UnitAreaValueBreakup uav) {
 		this.uav = uav;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((assessmentYear == null) ? 0 : assessmentYear.hashCode());
+		result = prime * result + ((buildUpArea == null) ? 0 : buildUpArea.hashCode());
+		result = prime * result + ((buildingConstructedYear == null) ? 0 : buildingConstructedYear.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((ownerName == null) ? 0 : ownerName.hashCode());
+		result = prime * result + ((taxPaid == null) ? 0 : taxPaid.hashCode());
+		result = prime * result + ((uav == null) ? 0 : uav.hashCode());
+		result = prime * result + ((uavId == null) ? 0 : uavId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PropertyTaxPayment other = (PropertyTaxPayment) obj;
+		if (address == null) {
+			if (other.address != null) {
+				return false;
+			}
+		} else if (!address.equals(other.address)) {
+			return false;
+		}
+		if (assessmentYear == null) {
+			if (other.assessmentYear != null) {
+				return false;
+			}
+		} else if (!assessmentYear.equals(other.assessmentYear)) {
+			return false;
+		}
+		if (buildUpArea == null) {
+			if (other.buildUpArea != null) {
+				return false;
+			}
+		} else if (!buildUpArea.equals(other.buildUpArea)) {
+			return false;
+		}
+		if (buildingConstructedYear == null) {
+			if (other.buildingConstructedYear != null) {
+				return false;
+			}
+		} else if (!buildingConstructedYear.equals(other.buildingConstructedYear)) {
+			return false;
+		}
+		if (email == null) {
+			if (other.email != null) {
+				return false;
+			}
+		} else if (!email.equals(other.email)) {
+			return false;
+		}
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		if (ownerName == null) {
+			if (other.ownerName != null) {
+				return false;
+			}
+		} else if (!ownerName.equals(other.ownerName)) {
+			return false;
+		}
+		if (taxPaid == null) {
+			if (other.taxPaid != null) {
+				return false;
+			}
+		} else if (!taxPaid.equals(other.taxPaid)) {
+			return false;
+		}
+		if (uav == null) {
+			if (other.uav != null) {
+				return false;
+			}
+		} else if (!uav.equals(other.uav)) {
+			return false;
+		}
+		if (uavId == null) {
+			if (other.uavId != null) {
+				return false;
+			}
+		} else if (!uavId.equals(other.uavId)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int compareTo(PropertyTaxPayment o) {
+		return this.id.compareTo(o.id);
 	}
 
 }

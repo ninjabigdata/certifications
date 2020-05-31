@@ -1,5 +1,7 @@
 package org.mindtree.com.assessment.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -18,7 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "unit_area_value")
-public class UnitAreaValueBreakup {
+public class UnitAreaValueBreakup implements Comparable<UnitAreaValueBreakup> {
 
 	/**
 	 * Auto-generated Id. Primary Key field
@@ -72,6 +75,12 @@ public class UnitAreaValueBreakup {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(insertable = false, updatable = false)
 	private Zone zone;
+
+	/**
+	 * {@link OneToMany} mapping for {@link PropertyTaxPayment}
+	 */
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<PropertyTaxPayment> propertyTaxPayment;
 
 	/**
 	 * The getter method
@@ -215,6 +224,117 @@ public class UnitAreaValueBreakup {
 	 */
 	public void setZone(Zone zone) {
 		this.zone = zone;
+	}
+
+	/**
+	 * The setter method
+	 * 
+	 * @return the propertyTaxPayment
+	 */
+	public Set<PropertyTaxPayment> getPropertyTaxPayment() {
+		return propertyTaxPayment;
+	}
+
+	/**
+	 * The getter method
+	 * 
+	 * @param propertyTaxPayment the propertyTaxPayment to set
+	 */
+	public void setPropertyTaxPayment(Set<PropertyTaxPayment> propertyTaxPayment) {
+		this.propertyTaxPayment = propertyTaxPayment;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((category == null) ? 0 : category.hashCode());
+		result = prime * result + ((categoryId == null) ? 0 : categoryId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((statusId == null) ? 0 : statusId.hashCode());
+		result = prime * result + ((unitAreaValue == null) ? 0 : unitAreaValue.hashCode());
+		result = prime * result + ((zone == null) ? 0 : zone.hashCode());
+		result = prime * result + ((zoneId == null) ? 0 : zoneId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UnitAreaValueBreakup other = (UnitAreaValueBreakup) obj;
+		if (category == null) {
+			if (other.category != null) {
+				return false;
+			}
+		} else if (!category.equals(other.category)) {
+			return false;
+		}
+		if (categoryId == null) {
+			if (other.categoryId != null) {
+				return false;
+			}
+		} else if (!categoryId.equals(other.categoryId)) {
+			return false;
+		}
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		if (status == null) {
+			if (other.status != null) {
+				return false;
+			}
+		} else if (!status.equals(other.status)) {
+			return false;
+		}
+		if (statusId == null) {
+			if (other.statusId != null) {
+				return false;
+			}
+		} else if (!statusId.equals(other.statusId)) {
+			return false;
+		}
+		if (unitAreaValue == null) {
+			if (other.unitAreaValue != null) {
+				return false;
+			}
+		} else if (!unitAreaValue.equals(other.unitAreaValue)) {
+			return false;
+		}
+		if (zone == null) {
+			if (other.zone != null)
+				return false;
+		} else if (!zone.equals(other.zone)) {
+			return false;
+		}
+		if (zoneId == null) {
+			if (other.zoneId != null)
+				return false;
+		} else if (!zoneId.equals(other.zoneId)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UnitAreaValueBreakup [id=" + id + ", categoryId=" + categoryId + ", statusId=" + statusId + ", zoneId="
+				+ zoneId + ", unitAreaValue=" + unitAreaValue + ", category=" + category + ", status=" + status
+				+ ", zone=" + zone + "]";
+	}
+
+	@Override
+	public int compareTo(UnitAreaValueBreakup o) {
+		return this.getId().compareTo(o.getId());
 	}
 
 }

@@ -12,6 +12,11 @@ import javassist.SerialVersionUID;
  */
 public class ApplicationException extends Exception {
 
+	@Override
+	public String toString() {
+		return "ApplicationException [exceptionCode=" + exceptionCode + ", errors=" + errors + "]";
+	}
+
 	/**
 	 * The {@link SerialVersionUID}
 	 */

@@ -13,6 +13,8 @@ import org.mindtree.com.assessment.dto.PropertyDetailsDTO;
 import org.mindtree.com.assessment.dto.ResponseDTO;
 import org.mindtree.com.assessment.exception.ApplicationException;
 import org.mindtree.com.assessment.service.PropertyTaxService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/property-tax")
 public class PropertyTaxController {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private PropertyTaxService propertyTaxService;
 
@@ -50,6 +54,8 @@ public class PropertyTaxController {
 			}
 			responseDTO.setErrors(errors);
 			responseDTO.setStatus(FAILURE);
+
+			logger.error(errors.toString());
 		} else {
 
 			try {
@@ -58,6 +64,8 @@ public class PropertyTaxController {
 			} catch (ApplicationException exception) {
 				responseDTO.setErrors(exception.getErrors());
 				responseDTO.setStatus(FAILURE);
+
+				logger.error(exception.getMessage());
 			}
 		}
 
@@ -77,6 +85,8 @@ public class PropertyTaxController {
 			}
 			responseDTO.setErrors(errors);
 			responseDTO.setStatus(FAILURE);
+
+			logger.error(errors.toString());
 		} else {
 
 			try {
@@ -89,6 +99,8 @@ public class PropertyTaxController {
 					Map<String, String> errors = new HashMap<>();
 					errors.put(ApplicationConstants.TAX_PAYABLE, exception.getExceptionCode());
 					responseDTO.setErrors(errors);
+
+					logger.error(errors.toString());
 				}
 				responseDTO.setStatus(FAILURE);
 			}
@@ -109,6 +121,8 @@ public class PropertyTaxController {
 			errors.put(ApplicationConstants.REPORT, exception.getExceptionCode());
 			responseDTO.setErrors(errors);
 			responseDTO.setStatus(FAILURE);
+
+			logger.error(errors.toString());
 		}
 
 		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
