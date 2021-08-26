@@ -1,0 +1,16 @@
+Demo App Architecture
+	Traditional 3 Tier Application
+		UI --> Service --> DB
+	
+	Zipkin
+		For distrubed tracing
+		Troubleshooting collosion and latency in microservices
+	
+	RabbitMQ
+		Messaging Queue
+		Load-balacing
+		Create connections among aysnc independent services
+		
+	Config
+		For application configuration
+		Runtime configuration

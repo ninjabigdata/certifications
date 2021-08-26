@@ -1,0 +1,11 @@
+Which of these Google Cloud Platform services is a fully managed Platform-as-a-Service framework?
+	App Engine
+
+Why might a developer migrate an application from Cloud SQL to Cloud Spanner?
+	To meet needs for high levels of transactional performance
+
+What is Cloud Pub/Sub?
+	A scalable message queuing service
+
+What is Spring Boot?
+	A solution designed to simply the bootstrapping and development of Spring-base applications

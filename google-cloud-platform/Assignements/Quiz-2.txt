@@ -1,0 +1,52 @@
+1.Question 1
+You are connecting your application to a new Cloud SQL instance. What is the default setting for whether the instance will accept connections from public IP addresses?
+
+The instance will accept connections, and you must restrict public access immediately.
+
+
+The instance will not accept connections, and you must temporarily whitelist it to configure your database. -- Correct
+
+2.Question 2
+What is the purpose of the Google Cloud Runtime Configuration API?
+
+To allow your Google Cloud Platform resources to be elastically configured in response to application load, so that you don't have to predict application usage.
+
+
+To allow your applications to retrieve configuration-related key-value pairs, so that they don't have to be embedded in your application source code. -- Correct
+
+3.Question 3
+What is the purpose of Stackdriver Trace?
+
+
+To let developers measure the amount of time their running applications are spending in various calls.
+
+
+To let developers measure the latency of calls in their running applications. -- Correct
+
+4.Question 4
+What role does Cloud Pub/Sub play in an application?
+
+A middleware layer -- Correct
+
+
+An end-user messaging layer
+
+5.Question 5
+What is the purpose of Stackdriver Debugger?
+
+To gather the logging statements from your running applications into a searchable dashboard.
+
+
+To inspect the state of your application without stopping the running app. -- Correct
+
+
+To analyze core dumps from your terminated applications.
+
+6.Question 6
+What is the purpose of configuring Stackdriver Kubernetes Monitoring's Prometheus support option?
+
+To autoconfigure an application to report metrics using the Prometheus data model
+
+
+To allow services that use the Prometheus data model to report metrics to Stackdriver and make them visible as external metrics -- Correct
+

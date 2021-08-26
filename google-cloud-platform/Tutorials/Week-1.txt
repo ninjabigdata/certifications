@@ -1,0 +1,23 @@
+GCP --> Google Cloud Platform
+	Services
+		Compute Functions
+			Cloud Functions
+				--> Serverless computing
+			App Engine
+				--> Platform as a Service
+			Kubernetes Engine
+				--> Service Environment as a Service for containerized apps
+			Compute Engine
+				--> Google infrastructure as a Service to manage the solutions by the organization
+		Storage Services
+			Cloud BigTable
+			Cloud Storage
+			Cloud SQL
+			Cloud Spanner
+			Cloud Datalab
+		Machine Leraning
+			Cloud Vision API
+			Cloud ML Engine
+			Cloud Speech API
+			Cloud Translation API
+			CLoud Natural Language API
