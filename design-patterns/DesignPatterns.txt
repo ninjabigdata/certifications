@@ -1,0 +1,335 @@
+Design Patterns
+	Commonly applied / proven patterns / solutions to resolve the common / recurring problems
+	This also ensures maintainability and reusability
+	Conceptual in nature and not a plugin like 3rd party libs
+	
+	Creational, Structural and Behavioural Patterns
+		Creational
+			Handles how to create objects
+				Like cloning an object, if same object to be created
+		Structural
+			Describes how the objects are connected to each other. Also describes how sub-class and super class communicates
+				Decomposition and Generalization
+		Behavioural
+			How objects distribute works
+			Each object has a specific task
+			Objects combined together to achieve the goal
+	
+	Creational Patterns
+		Singleton
+			The class will have only one object
+				Examples: Preferences for the game. Object for conencting to DB
+			This object will be accessed globally by the application
+			
+			Code Template
+				Have private constructor for the class
+				Declare an instance variable
+				Declare a public method (getMethod()), for instantiate the instance variable. If instance variable is already instantiated, return the same else create a new object
+			
+				public class Sample {
+					private Sample sample;
+					
+					private Sample() {
+					}
+					
+					public Sample getInstance() {
+						if (sample == null) {
+							sample = new Sample();
+						}
+						
+						return sample;
+					}
+				}
+			
+			This ensures that object is created only when needed. Lazy initialization.
+			
+		Factory Patterns
+			Objects are created at the factory.
+			This ensures easier modification of the object creation
+			
+			Factory Method Pattern
+				The method will create the object based on the requirement.
+				If there are many sub-classes and object has to instantiated based on the type, the code to create object based on type can be moved to method. Such methos is called as Factory method.
+				If multiple classes wants to instantiate the same object, this pattern cuts the redundant code for creating objects for sub-classes based on type
+				
+			
+	Structural Patterns
+		Facade Pattern
+			Client wants the easier interaction with the application
+			A facade acts a point of entry to the system
+			Wraps the creation of objects for multiple interfaces which are required for interacting the sub-system from the client
+			
+			Steps for achieving facade pattern
+				Design the interface
+				Implement the interface with one or more classes
+				Create facade class and wrap the classes that implement the interfaces
+					Declare the instance variables as private
+				Use facade class to access the sub-system
+			
+			This pattern provides encapsulation (step 3), information hiding (Step 3) and separation of concerns
+			
+		Adapter Pattern
+			Addresses the compatibility issues between the sub-systems
+			This pattern creates a class for wrapping the adaptee's interface and exposing the target system 
+			
+			Flow of control
+				The client sends the message to adapter
+				The adapter translates the message that will be understood by the adaptee
+				The adapter sends the message to adaptee
+				
+			Steps for implementing
+				Design the target interface
+				Implement the target interface with adapter class
+				Send the request from the client to the adapter using the target interface
+				
+		Composite Pattern / Recursive Pattern
+			To compose nested structure of objects
+			Achieved through polymorphism
+			Makes the nested objects look alike tree
+			
+			The composite design pattern is used to address two issues:
+				How do we use individual types of objects to build a tree-like structure? and
+				How can we treat the individual types of objects uniformly without checking their types?
+				
+			Steps for implementing
+				Design the interface that defines the overall type
+				Implement the composite class
+					Add a collection to have other components
+				Implement the leaf class
+			
+		Proxy Pattern
+			A placeholder for the original object
+			Eg: A dummy for car crash test, a debit / credit card for the payment
+			
+			Why to use proxy
+				To act as a virtual proxy
+					Where original object is resource intensive
+				To act as a protection proxy
+					To protect the original object
+				To act as a remote proxy
+		
+			Proxy delegates the original object. Proxy can also take care of few implementations
+			
+			Example:
+				Fulfulling orders through warehouse
+					The warehouse may or may not has the all products provided in the orders
+					A proxy can be used here, to make partial orders to the warehouse based on the warehouse's inventory and by publishing the inventory to proxy
+					This protects the warehouse from recieving order which cannot be fulfilled
+			
+			Steps for implementation
+				Design the subject interface
+				Implement the real subject class
+				Implement the proxy class
+				
+		Decorator Pattern
+			For combining different classes during runtime through aggregation
+			Decorator is an abstract class implementing the interface and acts as super class
+			
+			Steps for implementing
+				Design the component interface
+				Implement the interface with your base concrete component class
+				Implement the interface with your abstract decorator class
+				Inherit from the abstract decorator and implement the component interface with concrete decorator class
+					
+	Behavioural Patterns
+		Template Method Pattern
+			describes how object work independantly
+			Example:
+				Preparing varities of Pasta in a kitchen
+					Most of the steps for preparing pasta of various types will be identical and only few steps will be unique to the variety
+					The identical steps will be part of the super class and unqiue steps will be defined in sub-classes
+					
+			Steps for implementing
+				Create an abstract class with the template method
+				
+			Can be used when two funtionalities with common functions
+			
+	Chain of Responsibility Pattern
+		The chain of objects handles the responsibility for the request
+		It's a series of handlers, the request will be passed on to the handlers one after the another. 
+		Example: Filter for emails
+		
+		Rules for checking request is passed to next handler, if the handler cannot process the request
+			Check if rule matches
+			If it matches, do something specific
+			If it doesnt match, call the next handler
+		This rule can be achieved through template pattern
+		
+		This pattern decouples the sender to the reciever
+	
+	State Pattern
+		Change the behaviour of the object based on the state of the object
+		Example: Vending machine
+		
+		Implementation
+			Have singleton object for each state
+
+	
+	Command Pattern
+		Encapsulates the request of its own object
+		This creates a command pattern and sends it the reciever
+		
+		Invoker
+			Invokes the command
+		Command Manager
+			Keeps track of the commands
+		
+		Helps to achieve undo/redo pattern
+		Decouples the sender and receiver
+		
+	Mediator Pattern
+		Example: When different objects have to interact with each other, all the objects can have their communication channels. And when more objects are added, the communication channels will increase and will make the system complex. To overcome this issue, another interface can be introduced which will take care of the communication among the devices. Such interface is called mediator and the objects that interact with mediator are called colleagues
+
+	Observer Pattern
+		Example: Checking new posts on a blog. The blog can maintain the users who have to be notified when new post is available / added to the blog. Here the blog is the subject and users are the observers who have subscribed to the blog
+		
+		Implementation
+			Create a Subject superclass
+				Methods
+					Allow a new observer to subscribe
+					Allow a current subscribe to unsubscribe
+					Notify all observers about a new blog post
+			Observer Interface
+			Blog Class is a sub class of Subject
+			Subscriber class will implement the Observer
+			
+	
+	MVC Pattern
+		
+
+		
+	Liskov Substitution Principle
+		If a class, S, is a subtype of a class, B, then S can be used to replace all instances of B without changing the behaviors of a program.
+		
+		Inheritance Guidelines
+			1. The condition used to determine if a base class should or should not invoke a method cannot be "strengthened" by a subclass. That is, a subclass cannot add more conditions to determine if a method should be called.
+			
+			2. The condition of the program after the execution of a method cannot be "weakened" by a subclass. This means that the subclass should cause the state of the program to be in the same state as the base class after a method call. Subclasses are allowed to "strengthen" the postcondition of a program. For example, if the base class sets an alarm for a specific date, the subclass must do the same, but the result can be more precise by setting the specific hour as well.
+			
+			3. Invariant conditions that exist in the base class, must also remain invariant in the subclass. Since invariant conditions are expected to be immutable, the subclass should not change them as it may cause a side effect in the behaviours of the base class or the program.
+			
+			4. Immutable characteristics of a base class must not be changed by the subclass. Since classes can modify their own characteristics, a subclass can modify all the characteristics that it inherits from the base. However, the base class may encapsulate attributes that should be fixed values. These values are identifiable by observing whether or not they are changed in the program, or by a method in the base class. If it is not changed, then these attributes are considered immutable. Subclasses can get around this problem by declaring and modifying their own attributes. The attributes of a subclass are not visible to the base class and therefore, do not affect the behaviour of the base class.
+			
+	Open/Closed Principle
+		Flexible enables extension of the program
+		Reusable enabled to reuse the program instead of rewriting again
+		
+		This principle says "Classes should be open to extension but closed to change"
+		
+		When class is considered to be closed
+			Tested to be functioning properly
+			All the attributes and behaviors are encapsulated
+			Proveb to be stable within your system
+			
+		Changes to the classes are during the analysis and design stages
+		
+		How to extend the class
+			Through inheritance to extend the base-class
+			Through abstract-class inheritance
+			
+		The Open/Closed Principle is used to keep the stable parts of your system separate from the varying parts. Well, you want to be able to add more features to your system. You don't want to do it at the expense of disrupting something that works. By using extension over change, you can work on the varying parts without introducing unwanted side effects into the stable parts.
+		
+		Varying parts should be isolated, so eventually they become stable during the course of development
+		
+		
+	Dependency Inversion Principle
+		High level modules should depend on high level genralizations, and not on low level details
+		
+	Composing Objects Principle
+		The system should be less coupling so that system can be extended
+		
+		This principle states that classes should achieve code reuse through aggregation rather than inheritance
+		
+		Composite Design Pattern and Decorator Design Pattern use this principle
+
+		Advantages
+			Aggregation and delegation offers less coupling than inheritance
+			Easier to make changes in the associated classes
+			Provides more flexibility
+			No need to find out common functionalities among the classes and use polymorphism
+			
+		Disadvantages
+			Must provide all the implementations
+			
+		This principle will:
+			1. Provide a means of code reuse without tight coupling of inheritance
+			2. Allow objects to dynamically add behaviors at run time
+			3. Provide your system with more flexibility
+			
+	Interface Segregation Principle
+		A class should not be forced to depend on methods it does not use. This means that any classes that implement an interface, should not have "dummy" implementations of any methods defined in the interface. Instead, you should split larger interfaces into smaller genralizations
+		
+	Principle of Least Knowledge
+		To manage the complexity, one idea is
+			A class should be designed so that it does not need to know about and depend upon almost every other class in the system
+		
+		This rule is realized in "Law of Demeter"
+			Classes should know about and interact with as few other classes as possible. This means any class should only communicate with its immediate friends. These friends would be other classes that one class should only know about.
+		
+		Rules of "Law of Demeter"
+			1. A method, M, in an object, O, can call on any other method within O itself
+			2. A method, M, can call the methods of any parameter, P.
+			3. A method, M, can call a method, N, of an object, I, if I is instantiated in within M.
+			4. Any method, M, in object, O, can invoke methods of any type of object that is a direct component of O.
+	
+	Anti-Patterns and Code Smells
+		Refactoring: Improving the Design of Existing Code by Martin Fowler --> Reference book for Anti-Patterns
+		
+		Comments
+			Code has no comments at all
+			Too many comments is an issue
+			
+		Duplicated Code
+			Dont Repeat Yourself
+			
+		Long Methods
+		
+		Long Class
+			The larger the class, the more responsibilities that the class attracts
+			
+		Data Classes
+			POJO classes
+			
+		Data Clumps
+			Are group of data appearing together in instance variables of class or parameters of method
+			Data classes can be introduced instead of data clumps, but the data classes code smell had to be taken care which can be done by adding responsibilities to the data classes
+			
+		Too many parameters in method
+			Introduce class for the list of parameters
+			
+		Divergent Change
+			This code smell occurs when you have to change a class in many different ways, for many different reasons
+			This may be related to the large class or mainly due to no clear separation of concerns
+			Use separation of concerns DP to overcome this code smell
+			
+		Shotgun Surgery
+			This will occur when there is requirement which will change the many classes in the system
+			A change in one place requires you to fix many other areas in the code as a result.
+			
+		Feature Envy
+			This occurs when you have got a method that is more interested in the details of a class other than the one that it's in.
+			
+		Appropriate Intimacy
+			The issue of when two classes depend too much on one another through two way communication.
+			Refactor the two methods to a single method to avoid the two way communication
+			
+		Bad Message Chains
+			Causes rigidity or complexity in design
+			This code smell is due to the chain of method invocations to get a task done
+			
+		Primitive Obession
+			Primitive types should be used at the low level
+		
+		Switch Statements
+			
+		Speculative Generality
+			You may need this code someday
+			This occurs when you make a superclass, interface, or code that is not needed at the time, but you think that you may use it someday
+			
+		Refused Bequest
+			This occurs when sub-class inherit something which is not required from super-class
+			
+		
+		
+		
+	
