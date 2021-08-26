@@ -1,0 +1,8 @@
+com\example\repository\ClinicalDataRepo.class
+com\example\repository\PatientRepo.class
+com\example\dto\ClinicalDataDTO.class
+com\example\entity\ClinicalData.class
+com\example\ClinicalApplication.class
+com\example\controller\PatientController.class
+com\example\controller\ClinicalDataController.class
+com\example\entity\Patient.class
