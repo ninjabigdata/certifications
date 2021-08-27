@@ -1,0 +1,360 @@
+Hibernate
+	@Column is not mandatory in entity class.
+	
+	Generators
+		To use Identity generator, the column definition should have AUTO_INCREMENT
+		
+		Table Statergy
+			Create a table in DB with two columns: one for generator name and another for value
+			Use @TableGenerator for primary key column. Define the following attributes
+				name	--> name of the generator
+				table	--> the table which was created to store id generator
+				pkColumnName	--> generator name column
+				valueColumnName	--> the column which will hold the last generated value
+				allocationSize	--> incrementer for next value
+			Use the name of the generator in generator attribute of GeneratedValue annotation
+			
+		Custom Generator
+			Create a class that implements IdentifierGenerator and override generate method
+				The overridden method must return next value for Id column
+			In the entity class, use GenericGenerator and define the following attributes
+				name			--> name of the generator
+				statergy		--> full qualified class name defined in previous step
+				
+				In GeneratedValue annotation, set value of generator to name defined in previous step
+				
+	Paging and Sorting
+		The repo must extend PagingAndSortingRepository
+		
+		Creating Pageable object
+			Pageable pg = PageRequest.of(starting_value, size);
+			
+		Sorting
+			Sort.by(new Sort(Direction.DESC/ASC/null, column_name)
+			Default sort order is ASC
+			
+			Sort Multiple Columns in same order
+				Sort.by(Sort.Direction.DESC, "column_1", "column_2")
+				
+			Sort multiple columns with sort order for each column
+				Sort.by(Sort.Order.desc("column_1"), Sort.Order.asc("column_2"))
+				
+		Pageable with sorting
+			Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Order.desc("name")));
+			sortedEmployees = employeeRepo.findAll(pageable).getContent();
+			
+		Adding Pageable / Sorting to custom finder methods
+			findAllbyName(String name, Pageable pageable);
+			To sort / paginate custom finder method, not mandatory to extend PagingAndSortingRepository interface.
+			
+	JPQL
+		The classname and attributes are case-sensitive in JPQL
+		select * is redundant in JPQL. By default, Crud repo will fetch all the columns. The JPQL for get all students from student table will be
+			@Query("from Student")
+		
+		Read Partial Data from Entity
+			To get firstName and lastName from entity, the JPQL is
+				@Query("SELECT st.firstName, st.lastName from Student st")
+				
+		Named Parameters
+			@Query("from Student WHERE lastName = :lastName")
+			Optional<List<Student>> findAllByLastName(@Param("lastName") String lastName);
+			
+		Non Select Statements
+			The repo method must be annotated with @Modifying
+			The caller method should be annotated with @Transactional or the repo method should be annotated
+				@Transactional
+				@Modifying
+				@Query("delete from Student where firstName = :firstName")
+				void deleteByFirstName(@Param("firstName") String firstName);
+				
+		Paging and Sorting
+			Add the Pageable as input paramter to repository method
+			
+	Native SQL Query
+		
+	
+	Inheritance Mapping
+		Sub-type problem
+			The inheritance cannot provided by DB
+		
+		Statergies for in heritance
+			Single Table
+			Table per class
+			Joined
+		
+			Single Table Statergy
+				The sub-types will use the same table. A column will be added to categorise/discriminate the rows based on subtype. This column is column discriminator
+				
+				Annotations
+					@Inheritance --> specify the type of statergy. Will be added to base-class
+					@DiscriminatorColumn --> Will be added in base-class class
+						name --> discriminator column name
+						discriminatorType --> type of the discriminator column
+					@DiscriminatorValue --> will be added in sub-class
+						value --> value of the discriminator column
+				
+				For querying
+					Create repository for base-class
+					Add the JPQL / Native Queries methods to fetch the values from sub-class
+					Or Create separate repository for each sub-class by extending base-class repository and annotate the base-class repository with @NoRepositoryBean
+					
+			Table per statergy
+				One table per sub-class and the bas-class will have the commpn attributes. No discriminator column. If primary key column is added to base-class, use Sequence as id generation statergy
+				
+				Annotations
+					@Inheritance --> specify the type of statergy. Will be added to base-class
+					
+				For quering
+					Same as single table statergy
+					
+			Joined Statergy
+				Tables will be created for both base-class and sub-classes. The primary key of base-class will be the foreign-key in sub-class.
+				It follows normalization. 
+				
+				Annotations
+					@Inheritance --> specify the type of statergy. Will be added to base-class
+					@PrimaryKeyJoinColumn(name = "id") --> Specify the foreign key  / join column in sub-class.
+					
+				For quering
+					Same as single table statergy
+					
+	Component Mapping
+		When an object has has-a relationship with another object, then use component mapping. It will map multiple classes into a single table.
+		
+		Annotations
+			@Embeddable 	--> Specify this annotation to the class which will be used in another class
+			@Embedded		--> Add this to the attribute of the table which uses the other class
+			
+		For quering
+			Create repository for the entity which contains the embedded object
+			
+	Association Mapping
+		Types
+			One-to-One
+			Many-to-Many
+			One-to-Many
+			Many-to-One
+			
+		Based of Direction
+			Unidirectional
+			Bidirectional
+			
+		One-to-Many
+			One object is associated with multiple objects of another entity
+			Eg: A person can have multiple phone numbers
+			
+			Annotations
+				@OneToMany		--> Specify this annotation to the parent entity
+					Attributes
+						mappedBy	--> Specifies which attribute owns the relationship. Set the value same as that of the owning attribute name.
+										This is done in referencing side.
+										
+				@Many-to-One	--> Specify this annotation in the child entity
+				@JoinColumn		--> Specify in the child entity
+					Attributes
+						name	--> Name of the foreign key
+						
+			Cascading
+				The @OneToMany has the cascade attribute. This cascades the effect of operations done on parent class to child class.
+				The default value is no cascade. So on saving the parent entity, the child entities will not saved.
+				This attribute will helps to control the effect of operations (namely, update, save, delete) being propagated from parent class to child classes
+				During update operation, the JPA implementation is smart enough to determine, if child entities are updated or not. Only the updated child entities will updated in DB.
+				
+				Values
+					persist	--> The insert operation on parent class should be propagated to child
+					merge	--> The insert / update operations on parent class should be propagated to child
+					remove	--> The delete operation
+					refresh	--> During the refresh operation on entity manager
+					detach	--> detach operation on entity manager
+					All		--> For above all operations
+					
+			How to add foreign-key while saving?
+				There are two ways:
+					1. Set the primary entity to the child entity by using @Many-to-One
+					2. Create a method in parent class to add the child entities to the collections. In that method, set the parent-object referenced in child-object
+					
+			Fetch Type
+				Types
+					Lazy	--> Default type
+					Eager
+					
+				Spring JPA does not support lazy initialization as the Session is closed. To load the object marked as lazy load, use JPQL fetch join and create a method in the repository
+					Eg: 
+						@Query("FROM CustomerOneToMany c JOIN FETCH c.phoneNumbers phoneNumbers WHERE c.id = :id")
+						public CustomerOneToMany findByIdAndFetchEager(@Param("id") Integer id);
+						
+			Delete Operation
+				For one-to-many, default value of orphanRemoval is set to true. So on deleting parent object, the child objects will also be deleted
+				
+		Many-to-Many
+			A third table is reqiored to do the mapping.
+			
+			Annotations
+				@ManyToMany --> Specify this on both entities
+					In the non-owning side of the relationship / child entity, specify 
+						mappedBy	--> name of the attribute used for mapping in parent entity
+				@JoinTable	--> Specify this on parent entity (also known as owning side of the relationship)
+					Attributes
+						name	--> name of the join table
+						joinColumns --> Specify the foreign-key column used in join table. Use @JoinColumn annotation for this.
+							@JoinColumn
+								Attributes
+									name	--> name of the foreign-key column in join table
+									referencedColumnName	--> referenced column in parent table
+						inverseJoinColumns	--> Specify the foreign-key column used in join table for referencing child table. Use @JoinColumn annotation for this.
+							@JoinColumn
+								Attributes
+									name	--> name of the foreign-key column in join table
+									referencedColumnName	--> referenced column in child table
+									
+			For Saving Child objects while saving parent object
+				Use cascade
+				For saving mapping in join table, add the child objects to parent object
+				
+		One-To-One
+			Unidirectional Mapping
+				If one object can exist without another object. Then it's unidirectional mapping. For this we use foreign key for mapping.
+				Eg: Person and License. A person can be without license.
+				
+			Bidirectional Mapping
+				Both the object with exist. For this case, we can use shared primary key.
+				Eg: Student and Library Membership. Membership is mandatory for all students.
+				
+				
+	Caching
+		First Level Cache
+			Provided by JPA provider by default
+			No config is required
+			The cache happens at session level and it will not be shared among other sessions
+		
+		Second Level Cache
+			It's provided by third party libraries
+			Requires additional config to add them
+			This happens at sessionFactory. So cache will be shared among the sessions
+			Examples:
+				ehcache
+				swaram cache
+				JBoss Tree Cache
+				OS Cache
+				Tangasol Cache
+		
+		Evict the object from cache
+			Get the entityManager object
+			Get the Session object using entityManager
+				Session session = entityManager.unwrap(Session.class)
+			Evict the object
+				session.evict(object)
+				
+		Steps to configure 2nd level cache
+			Add maven dependency
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-ehcache</artifactId>
+				</dependency>
+			Configure cache for the application
+				Add the following properties to application.properties
+					spring.jpa.properties.hibernate.cache.use_second_level_cache=true
+					spring.jpa.properties.hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+					spring.jpa.properties.javax.persistence.sharedCache.mode=ALL
+					spring.cache.ehcache.config=ehcache.xml
+			Create ehcache.xml
+				Create the xml file in resources folder. The name of the file should be same as the one provided in "spring.cache.ehcache.config" application property
+					Contents of the  file are
+						<ehcache>
+							<diskStore path="java.io.tmpdir" />
+							<defaultCache
+									maxElementsInMemory="100" eternal="false"
+									timeToIdleSeconds="5" timeToLiveSeconds="10" overflowToDisk="true" />
+						</ehcache>
+			Make entities cacheable
+				Add the @Cache annotation to the entity class which has to be cached and specify the cache concurrency statergy using usage attribute
+					@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+				Implement Serializable interface to the entity
+					This is required only when using disk store for cache
+			Test caching
+				
+				
+			Note: If cache is not defined for the entities, ehCache will use provider-specific default configuration. This can be disabled using the following property
+				hibernate.cache.ehcache.missing_cache_strategy
+		
+		Cache Concurrency Statergies
+			READ_ONLY
+				Application only reads the data from only
+				Exception will be thrown when write operation is performed
+			NONSTRICT_READ_WRITE
+				Permits read write
+				Read operation may take stale object since it's non strict
+			READ_WRITE
+				Permits read write
+				During write, a soft lock is acquired to update the object in the cache. So when another session tries to read the same object from cache, it checks for the lock. As lock is acquired by another session, it will read the data from DB
+				So this statergy will ensure consistency in the application
+			TRANSACTIONAL
+				Used for distributed transaction
+				
+	
+	Transaction
+		ACID Properties
+			Atomicity
+				Treat a transaction as a single unit of work
+			Consistency
+				The DB should be in consistent state after committing the transaction
+			Isolation
+				One transaction should not affect other transactions
+			Durability
+				After committing the changes, the transaction should continue to exist in DB
+		
+		Grouping of multiple DB queries into one is called transaction.
+		
+		Transactional Management Components
+			Transactional Application
+			Transactional Manager / Transactional Co-ordinator
+			Resource Manager
+			DB(s)
+			
+		Types of transaction
+			Local Transaction
+				If transaction happens on only one DB
+			Distributed Transaction
+				If transaction happens on multiple DBs
+				
+		@Transactional does not work when transactions are invoked from PostConstruct. Explanation: https://stackoverflow.com/questions/39096860/roll-back-a-if-b-goes-wrong-spring-boot-jdbctemplate
+		
+		
+	Calling Stored Procedure
+		In the repo, create a method and use Native Query
+			Eg: 
+				@Query(value="{call procedure(...inputs)}", native=true)
+				
+			The inputs can be passed which is similar to invoking JPQL / NativeQuery
+			
+		The @NamedStoredProcedureQuery can also be used at entity class
+			Attributes
+				name						--> entityName.repoMethodName
+				procedureName				-->	name of the stored procedure
+				@StoredProcedureParameter	--> To specify the input and output parameters
+					mode					--> IN / OUT
+					name					--> Parameter name
+					type					--> Data type of the parameter
+					
+	Composite Primary Key
+		Primary key formed using two or more columns
+		In JPA, this can be defined using
+			IdClass
+				Define a POJO class with id fields
+				Define the entity with all the columns including composite primary key columns.
+				Annotate the composite primary key column with Id and the entity class with IdClass(NameOfTheIdClass.class)
+			Embeddable and EmbeddedId
+				Define the Embeddable class with the composite primary key columns
+				Define the entity class with the rest of the columns exclude composite primary key columns.
+				Add the composite primary key using @EmbeddedId on embeddable field
+		Every key class must implement Serializable
+		
+	
+						
+		
+					
+					
+					
+					
+			
