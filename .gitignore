@@ -37,3 +37,6 @@ gradlew.bat
 videos
 bin
 build
+
+#IntellJ
+.idea/*
