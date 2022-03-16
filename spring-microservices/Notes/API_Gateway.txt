@@ -1,0 +1,193 @@
+API Gateway
+	Responsibilities
+		Routing / Dynamic Routing
+		Security
+		Rate Limiting
+		Monitoring / Logging
+		Blue / Green Deployment
+		Caching
+		Monolith Strangling
+	
+	Types of API Gateways
+		Applainces / Hardware - F5
+		SAAS - AWS Elastic Load Balancer
+		Web Services - Configured as Proxies
+		Developer Oriented - Zuul or Spring Cloud Gateway
+		Others - Techologies are evolving here
+		
+		Types can be combined
+	
+	Spring Cloud Gateway - Features
+		Java 8+, Spring Framework 5, Sptingboot 2, Project Reactor
+		Non-blocking, HTTP2 support, Netty
+		Dynamic Routing
+		Route Mapping on HTTP request attributes
+		Filters for HTTP request and response
+	
+	Spring Cloud Gateway Configuration
+		Create a bean of type RouteLocator. This bean takes RouteLocatorBuilder as input parameter
+		The following example routes the URI pattern to Google
+			@Bean
+			public routeLocator googleRouteConfig(RouteLocatorBuilder builder) {
+				return builder.routes()
+					.route(r -> r.pattern("/googlesearch")
+						.uri("https://google.com")
+						.id("google"))
+					.build();
+			}
+
+Circuit Breaker Pattern
+	A simple concept which allows you to recover from errors
+	If a service is unavailable or unrecoverable errors, via Circuit Breaker Pattern you can specify alternative action
+	
+	Spring Circuit Breaker Pattern
+		Spring abstract implementation of Circuit Breaker Pattern
+		Supported Implementations:
+			Netflix Hystrix
+			Resilience4j
+			Sentinel
+			Spring retry
+	
+	Spring Cloud Gateway Circuit Breakers
+		Spring cloud supports Hystrix and Resilience4j
+		Gateway Filters are used top of the Spring Cloud Circuit Breaker APIs
+		Netflix has placed Hystrix into maintenance mode, Spring suggests using Resilience4j
+	
+	Add Circuit Breaker to Route
+		Example:
+		@Bean
+		public RouteLocator loadBalancedRoutes(RouteLocatorBuilder builder) {
+			return builder.
+				.route(r -> r.path("/api/v1/beer*", "/api/v1/beer/*", "/api/v1/beer/upc/*")
+					.uri("lb://beer-service")
+					.id("beer-service"))
+				.route(r -> r.path("/api/v1/beer/*/inventory")
+					.filters(f -> f.circuitBreaker(c -> c.setName("inventoryCB")
+							.setFallbackUri("forward:/inventory-failover")
+							.setRouteId("inv-failover")
+						))
+					.uri("lb://inventory-service")
+					.id("inventory-service"))
+				.route(r -> r.path("/inventory-failover/**")
+					.uri("lb://inventory-failover")
+					.id("inventory-failover-service"))
+				.build();
+		}
+			
+	
+Spring Cloud Configuration
+	Provides externalized config for distributed envs
+	Provides RESTful style API for spring services to lookup config values
+	Springboot app on startup obtain config values from spring cloud config server
+	Props can be global and app specific
+	Props can be stored by Spring profiles
+	Easily encrypt and decrypt props
+	
+	Options provided for prop storage
+		Git (default) / SVN
+		File system
+		HashiCorp's vault
+		JDBC, Redis
+		AWS S3
+		CredHub
+	
+	Spring Cloud Config Client
+		Default is URL property 
+			spring.cloud.config.url
+				default value is http://localhost:8888
+		For discovery client, config client will look for service called - configserver
+		Fail fast, optionally config client to fail with exception, if config server cannot be reached
+	
+	Config Resources
+		Resources served as 
+			application	- spring.application.name
+			profile		- Spring active profile(s)
+			label		- spring.cloud.config.label
+			
+	Create Config Server
+		Annotate the Springboot Starter class with @EnableConfigServer
+		Add the following prop to application props
+			server.port=8888
+			spring.application.name=<app-name>
+			spring.cloud.config.server.git.uri=<url_of_git_repo>
+			spring.cloud.config.server.git.clone-on-start=true
+			logging.level.org.springframework.cloud=debug
+			logging.level.org.springframework.web=debug
+		
+	Add service discovery to microservices
+		Add the following properties
+			spring.cloud.discover.enabled=true
+			spring.cloud.discovery.service-id=<app-name-of-config-server>
+			
+
+Distributed Tracing
+	Tracking the requests across the microservices
+	Usage - for two aspects
+		Performance monitoring across steps
+		Logging or troubleshooting
+	
+	Spring Cloud Sleuth
+		A distributed tracing tool for spring cloud
+		Uses an open source distributed tracing library called Brave
+		How it works?
+			Heaaders on HTTP requests or messages are enhanced with trace data
+			logging in enhanced with trace data
+			optionally trace data can be reported to zipkin
+		
+		Dapper
+			Spring Cloud Sleuth uses terminology established by Dapper
+			Dapper is distributed tracing system developed by google for their prod systems
+			Terminologies
+				Span - basic unit of work. typically send / receive of a msg 
+				Trace - set of spans for a trx
+				cs / sr - client sent / server received - aka request
+				ss / cr - server sent / client received - aka response
+				
+		Zipkin Server
+			Open source project used to report distributed tracing metrics
+			info can be reported to zipkin via webservices via http	- optionally uses kafka / rabbit
+			zipkin - spring mvc project
+				recommended to use binary distribution or docker image. building own is not supported
+			uses in-memory DB for dev. cassandra or elasticsearch for prod
+			
+			Quick Start
+				cURL
+				docker
+				view - http://host:9411/zipkin
+				
+	Dependencies
+		spring-cloud-starter-sleuth --> for logging only
+		spring-cloud-starter-zipkin
+	
+	Props
+		spring.zipkin.baseUrl --> to configure zipkin server
+		
+	Logging output
+		Example Format 
+			logLevel [Appname, TraceId, SpanId, exportable]
+			
+			exportable --> should span be exported to zipkin?
+			
+	Zipkin Server
+		zipkin.io --> provides the configuration
+	
+	Configuring Spring Cloud Sleuth
+		Add the dependencies
+			spring-cloud-starter-zipkin
+		Set the following prop
+			spring.zipkin.baseUrl
+		Configure Logback to write JSON
+			Add the dependency
+				logstash-logback-encoder
+			Configure the logback.xml in resources
+			
+Securing Spring Cloud
+	Property Encryption & Decryption
+		Spring Cloud Config will store encrypted properties as
+			{cipher}<your encrypted value>
+		On client request, the encrypted prop will be decrypted
+		Must set a symmetric key in prop - 'encrypt.key' - should prefer setting in env variable
+		Asymmetric keys also supported
+	
+			
+		

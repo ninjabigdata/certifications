@@ -1,0 +1,119 @@
+SAGA
+	Spring State Machine
+		State machine - anything with set of known states
+		Eg: If-else, switch
+		
+		Terminologies
+			States
+				Specific state of state machine which is finite and predetermined value
+				Usually defined in enum
+			Events
+				Something that happens on a system - may or may not change state
+			Actions
+				Response of state machine to event
+			Transistions
+				Type of action which changes state
+			Guards
+				Boolean Condition
+			Extended State
+				State machine variables - in addition to state
+		
+		Why State Machine?
+			helps consistent behaviour for a finite number of states
+			App logic is defined for specific states / state transistions
+			App logic becomes more modular and defined precisely
+			Long blocks of, if-else, are difficult ro maitain
+			Helps avoiding spaghetti code for complex conditions
+		
+	Event Source
+		Another pattern to trigger event based on state. Instead of rebuilding the state from DB.
+		
+
+SAGA
+	Problems with Transactions in Microservices Context
+		In microservices, a transaction spans across multiple DBs and / or multiple services. So traditional transaction mgmt will not be applicable
+		
+	2 Phase Commit - 2PC
+		Interface
+		Happens in 2 phases
+			Voting
+			Commit
+		Coordinator asks every node, if transaction is okay
+			All nodes respond ok, transaction is committed. Each node sends ack to coordinator
+			If anyone node responds no, rollback msg is sent and each node ack to coordinator
+		Problems with 2PC
+			Does not scale - expensive
+			Blocking protocol
+			Perf is limited to the speed of slowest node
+			Coordinator is single point of failure
+			Techology lock-in - difficult to mix technology stacks
+	
+	Need of SAGAS
+		Death Star
+		BASE - Basically Available, Soft state, Eventually consistent
+		SAGAS were mainly introduced for Long Live Transactions(LLTs) within a single DB
+		
+	Sagas - The transaction model
+		Simply a series of steps to complete a biz process
+		Coordinate the invocation of microservices via msg or requests
+		Each step of saga can be considered as a request
+		Every step in Saga has a compenstating transaction
+			Semantically undoes the effect of a request
+			Might not restore to the exact previous state - but effectively the same
+			
+	Saga Steps
+		Each step must be a message or event to be consumed by a microservice
+		Steps are async
+		Within a microservice, it's normal to use traditional DB transistions
+		Each message must be idempotent
+		Each step has a compenstating transaction to undo the actions
+	
+	Compenstating Transaction
+		Effectively become Feral Concurrency Transaction
+		Mechanism to maintain system integrity
+		Should be idempotent
+		Cannot abort
+		Not same as rollback
+		
+	Sagas are ACD
+		A - Atomic
+		C - Consitency
+		D - Durability
+		
+	Saga Coordination
+		Definition - A long, involved story, account, or series of incidents
+		Appoaches for Saga Coordination
+			Choreography - Distributed decision making. Each actor decides next step
+			Orchestration - Centralized decision making. Central component decides next step
+			
+		Choreography Coordination
+			Benifits
+				Simple, loosely coupled
+				Good for simpler sagas
+			Problems
+				Cyclic dependencies
+				Harder to understand - logic is spreadout
+				Components are complex
+			Implementation
+				Typically coordinated using events
+				Each actor emits an event for the next step in Saga
+				Requires each actor to have logic about Saga
+				Each actor should know how to implement compenstating trx
+					Thus has more coupling to other services
+		
+		Orchestration Coordination
+			Benifits
+				Logic is centralized and easier to understand
+				Reduced coupling, better separation of concerns
+			Problems
+				Risk of over centralization - need to maintain focus on separation of concerns
+			Implementation
+				Has a central component directing each actor
+				Central component maintains state for the Saga
+					State Machine
+					Saga Execution Coordinator (SEC)
+					Event Sourcing
+				Must take responsibility for completion of Saga
+				
+		
+		

@@ -1,0 +1,314 @@
+Docker Commands
+	run
+		Start the container
+		Eg: docker run nginx
+		If image does not exist, it pulls the image
+		Options:
+			-d	Detach mode
+			--name <name_for_container> to set the container name
+	ps
+		Lists all the running containers with basic info like name, id, command, created, status, port
+		Options
+			-a	Lists all the containers
+	stop
+		Stops the container
+		Eg: docker stop <container_name/container_id>
+	rm
+		Removes the container
+		Eg: docker rm <container_name/container_id>
+		For multiple, demiliter is space
+	images
+		Lists all the images in the system
+	rmi
+		Remove the image. Ensure to remove all the containers using the image
+		Eg: docker rmi <image_name>
+		For multiple, demiliter is space
+	pull
+		Pulls the image and does not run it
+		Eg: docker pull <image_name>
+	
+	Note:
+		Running an OS image will lead to terminating it immediately. Since docker is intended to run only images that do some computations and not to host OS. The container will run only until the process hosted in that container is alive. Once the process terminates, the container will also be terminated.
+		
+	Append command to container
+		Eg: docker run ubuntu sleep 5
+	Execute command while starting the container
+		docker exec <container_name> <command_to_execute>
+	Execute command on a running container
+		docker exec <container_id> <command_to_execute>
+	Run container in detach mode
+		docker run <image_name>
+			Will run the container and will show the console logs. But cannot execute any commands on the container
+		-d
+			Runs the container in detached (in background)
+		attach
+			To attch the container
+			Eg: docker attach <first_few_characters_of_container_id>
+	Go to terminal / bash of container
+		docker run -it <container_name> bash
+		
+Docker Run Command
+	tag
+		Eg: docker run <image_name>:<tag>
+		Default tag is latest
+		Tag specifies the version of the image to run
+	stdin
+		-i	-> to run the container in interactive mode. This prompts user to provide the input
+		-t	-> to attach the terminal of the container. This can be combined with -i as -it
+	port mapping
+		-p <host_port>:<container_port>
+	volume mapping
+		To share the data between host and container. This will help to persist the data on host when deleting the container
+		-v <host_directory>:<container_directory>
+
+inspect
+	To inspect the container
+	docker inspect <container_name>
+View logs
+	To view the logs written to console
+	docker logs <container_name>
+	
+Docker Images
+	How to create an image?
+		Create a dockerfile (file name: Dockerfile)
+			This file contains the instructions for creating the docker image required for the application
+		The format of the instructions is
+			<COMMAND_IN_CAPS> <arguments_to_the_command_in_lowercase>
+		Base Image
+			Choose the base image on which application will be deployed
+			It will be OS or another application like servers / DBs
+			Instruction:
+				FROM <name_of_base_image>
+		To execute commands after loading the base image
+			RUN <command_to_be_executed>
+		To copy the data from host to container
+			COPY <host_directory> <container_directory>
+		To specify the entrypoint
+			ENTRYPOINT <command_to_start_the_application>
+			
+		This architecture to create an image is layered architecture. Each instruction is called the layer. The layer stores info only about the previous layer.
+		
+		To view how much space was taken by each layer, run
+			docker history <image_name>
+	
+	Build the docker image
+		docker build .
+		To build docker image with name
+			docker build -t <image_name>
+		
+		This command shows the status of every layer
+		In case of failure / update any existing layer / add new layer, this can be done without running all the tasks / layers in the dockerfile
+		To rebuild, run
+			docker build -t <image_name>
+	Push the image to dockerhub
+		Login to docker
+			docker login
+		Push the image
+			docker push <image_name>
+
+Environment Variables
+	-e	--> to set the env variable
+	environmentVariable=value
+
+Specify the argument for Dockerfile
+	Use entrypoint
+	Eg: docker run <image_name> <value>
+	ENTRYPOINT ["sleep"]
+	
+	This entrypoint will take value from docker run command as input argument to sleep
+	To specify default value to argument, use CMD
+	Eg:
+	ENTRYPOINT ["sleep"]
+	CMD ["5]
+
+Docker Compose
+	Configures to run multiple containers. The instructions are written to a file called docker-compose.yml
+	Commands
+		up
+			To run the docker-compose.yml file
+	Docker Compose File Contents
+		From version 2, specify the version of docker-compose file at the start of the file.
+			version: 2
+		Specify all the containers under services
+		Networking among containers
+			In version 1, all the containers share the default network connection called bridge. For inter-service communication, the links have to be specified for the required service in docker-compose. In version 2, a dedicated network established for services defined in an docker-compose file. The services interact will each other using the service name.
+			Define the networks in the file
+			Eg:
+				networks:
+					front-end:
+					back-end:
+			Then specify the appropriate networks to the services using networks property
+			Eg:
+				services:
+					redis:
+						image: redis
+						networks:
+							back-end
+					voting-app:
+						image: python
+						networks:
+							back-end
+							front-end
+		Dependency Service
+			Say DB service has to be started before application. This is not possible in version 1.
+			In version 2, the property, depends-on, can be added to the dependent service. This ensures the start order
+		
+	Version 3
+		This is the latest
+		Structure of the docker-compose.yml file is similar to v2
+		This version supports docker-swarm and docker stacks
+
+Docker Engine
+	The processes running on the containers are not completely isolated since they all run on the same host. Only within container, those processes are isolated.
+	Specify CPU Usage
+		--cpus=.5
+		Ensures the container does not utilize more than 50% of the host CPU
+	Specify memory
+		--memory=100m
+		Max memory location is set to 100MB
+		
+Docker Storage
+	With the layered architecture, while building new images / modifying images, the docker can build the layer from cache if that layer was build already. This reduces the time, space and improves efficiency
+	
+	Areas
+		Image Area -> Read-only
+		COntainer Area -> Read/Write
+		The code that was used to build the image resides in the image area. This area is a read-only area. As the layers in the image / image itself are shareable across the containers.
+		There is another area called container area. This is where the files generated by the container (i.e., app running on a container) are stored.
+		If the source code / any other file available in image area has to be modified. The docker copies the file to the container area and the file can be edited. 	This mechanism is called copy-on-write. This version of the file copied to container area will not affect the existing file in image area, thus not affecting any other container using that image. This version cease to exists in the container until it is destroyed.
+	
+	Volumes
+		This ensure that the copy pf data created by container will exist in the host. So that data will not be deleted when container is destroyed.
+		To share the volume from external source, use bind option
+	
+	Mount
+		Syntax: --mount type=bind,source=<host_directory>,target=<container_directory>
+	
+	Storage drivers are responsible for managing the docker storage
+		Types:
+			AUFS
+			ZFS
+			BTRFS
+			Device Mapper
+			Overlay
+			Overlay2
+
+Networks
+	Default Networks
+		By default, three networks are created
+			bridge
+				Private internal network created by docker inside the host for communicating with services
+				The IP address range starts from 172.17.0.0/24
+				The container ports can be exposed by port mapping
+			none
+				The container will not be attached to any network
+			host
+				Expose container port on host port. The host uses the same port number as defined in container
+		To specify the network, use --network=<network_name>
+	
+	User Defined Networks
+		docker network create --driver=bridge --subnet=182.18.0.1/16 --gateway=182.18.0.1 custom-isolated-network
+		
+		This command creates a new network
+		
+		docker network ls
+			To list all networks
+		
+		docker inspect <container_name>
+			This command provides the info about network. This is under NetworkSettings-->networks
+			
+Docker Registry
+	Central repo for all the docker images
+	Format of Image Name:
+		<user_account>/<image_name>
+		If user_account is provided, docker takes image_name as user_account by default
+	Default repo:
+		docker.io
+	Docker registry itself is an image exposed as registry and running at port, 5000
+	
+	If no registry exists, user can create a registry using the following command and host it in his machine
+	docker run -d -p 5000:5000 --name registry registry:2
+	
+	Push the image
+		docker image tag my-image localhost:5000/my-image
+		docker push localhost:5000/my-image
+		
+	Pull the image
+		docker pull localhost:5000/my-image
+		docker pull <ip-address>:5000/my-image
+
+Windows Docker
+	Tools
+		Docker Toolbox
+		Docker Desktop
+
+	Types of containers
+		windows server
+			Similar to linux containers. Runs the container on top of kernel and shares the kernel among the containers
+		Hyper-V Isolation
+			Each container runs on isolated virtual machine
+	
+	Base Images
+		Windows Server Core
+		Nano Server
+			Lightweight container
+		
+	Supported OS
+		Windows server 2016
+		Nano Server
+		Windows 10 Professional and Enterprise Editions (hyper-v isolated containers)
+		
+Docker on Mac
+	Similar to Windows
+	No mac based images / containers
+	
+Container Orchestration
+	For load balancing
+	Monitor the health, state of the containers
+	
+	Eg:
+		docker service create --replicas=100 nodejs
+	This is docker swarm command
+	
+	SOlutions:
+		Docker Swarm
+			Easy to setup
+			Lacks advance features like auto-scaling
+		Kubernetes
+			Difficult to setup
+			Supports many advanced features
+			Supported by many cloud providers
+		MESOS
+			Difficult to setup
+			Supports many advanced features
+			
+	Docker Swarm
+		Combine multiple docker machines to form a cluster
+		Takes care of load-balancing
+		
+		Steps:
+			Create multiple hosts with docker installed
+			Mark one host as swarm manager and others as workers
+			Swarm Manager
+				docker swarm init
+					Starts the docker host as manager
+					Command outputs the docker swarm join command which has to be executed on the workers
+			Workers
+				Run the swarm join command
+			
+		Docker Service
+			docker service create --replicas=100 nodejs
+			
+			Runs the container in 100 workers
+			Cmd shld be run on swarm manager
+			Other options are similar to the docker run command
+
+	Kubernetes
+		kubectl run --replicas=1000 my-web-server
+			This runs the container on 1000 hosts
+		kubectl scale --replicas=2000 my-web-server
+			This scales up the containers
+		This scaling can be done automatically
+			kubectl rolling-update my-web-server --image=web-server:2
+		To rollback
+			kubectl rolling-update my-web-server --rollback

@@ -1,0 +1,89 @@
+Maven
+	Why Maven?
+		Build tool for Java Applications
+		70% of the build tool market
+	
+	Advantages
+		Quick project setup
+			Conventions over config --> reducing setup time
+		Projects are modular
+		Mature dependency mgmt
+		Mature project build lifecycle
+		Robust plugin community
+	
+	Terminologies
+		Maven Coordiantes
+			Together groupId, artifactId and version are called as maven coordiantes
+			groupId and version can be imported from parent POM
+			
+			Maven version example:
+				3.2.1-987-beta
+				majorVersion.minorVersion.incrementalVersion-buildNumber-qualifier
+			
+			SNAPSHOT version --> specifies, it's a dev version
+			
+		Maven Repositories
+			location where artifacts are stored
+			Types
+				Local
+				Central
+				Remote
+		
+		Maven Wagon
+			A unified API
+			A transport abstract for artifact and repo handling code
+		
+		Maven Project Object Model
+		
+		Dependency
+			Dependency Scope
+				compile, provided, runtime, test, system, import
+			Dependency are managed by Maven Dependency Plugin
+				Important Goals
+					dependency:tree
+					dependency:go-offline
+					dependency:purge-local-repository
+					dependency:sources
+				
+		Maven Standard Directory Layout
+		
+		Maven Build Lifecycles
+			Lifecycle is a predefined group of build steps called phases
+			Each phase can be bound to one or more plugin goals
+		
+			Lifecycles
+				validate
+				compile
+				test
+				package
+				verify
+				install
+				deploy
+		
+		Maven Wrapper
+	
+	Common Maven Plugin
+		Maven Clean Plugin
+			Add the maven-clean-plugin to pom.xml under plugins
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactsId>
+					<version>3.1.0</version>
+					<executions>
+						<execution>
+							<id>auto-clean</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>clean</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				
+		Maven Compile Plugin
+	
+	Generating Source with Maven
+	
+	Help docs for Jacoco Plugin
+		https://www.petrikainulainen.net/programming/maven/creating-code-coverage-reports-for-unit-and-integration-tests-with-the-jacoco-maven-plugin/
+	
+	

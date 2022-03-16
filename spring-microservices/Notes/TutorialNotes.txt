@@ -1,0 +1,559 @@
+Common Microservice Deployment Tools
+	AWS Beanstalk
+	AWS ECS/EKS
+	Kubernetes
+	Docker Swarm
+	Red Hat OpenShift
+	Cloud Foundry
+
+Microservice Architecture & Design
+	Gateway / Load Balancers
+		Endpoints exposed to public internet
+		Abstracts the other services in the system
+		Acts as proxy for routing the client calls to the specific service whose internal routing is abstracted to client
+		Can also act as load balancer
+	
+	Service Instances
+		Expected number of services which depends on the reliability and load requirements
+		Min must be 3 for high availability
+		There are tools available for dynamically scaling the instances based on load or anticipated load 
+	
+	Database Tier
+		Typically one DB per microservice
+			Not a hard rule
+		Highly scalable services will often have one transaction database
+			And one or more read DB (replica)
+		Even can adopt multiple DB technologies and also SQL // NoSQl DBs too
+	
+	Messaging
+		Common pattern to expose the endpoint via RESTFul API
+			Dependent microservices are messaging based
+			Messages follow an event or command pattern
+		Messaging allows for decoupling and scalability
+		Messaging can also be used to define a work flow
+			Eg: New Order, Validate Order, Charge Credit Card, Allocate Inventory, Ship Order
+	
+	Downstream Services
+		Often an action on a microservice will invoke actions on multiple down stream services
+			Eg: Placing an order might invoke the following microservices
+				Validate Order
+				Pay Credit Card
+				Allocate Inventory
+				Ship Order
+
+Principle of Microservice
+	The 12-Factor App (Link: https://12factor.net)
+		A methodology to build Software-as-a-Service
+
+
+RESTFul Webservices
+	This is the most common approach for communicating among the microservices
+	
+	HTTP
+		Protocol used in RESTFul webservices
+		
+	Richardson Maturity Model (RMM)
+		RMM Levels
+			Level 3 (Hypermedia Controls)
+				Representation from server which contains URIs which may be useful to consumers
+				No standards now
+				But Spring provides an implementation called HATEOS
+			Level 2 (HTTP Verbs)
+				HTTP methods are used with URIs for desired action
+			Level 1 (Resources)
+				Uses multiple URIs to identify multiple resources
+				Get method with path variable
+			Level 0 (The Swamp of POX)
+				Plain Old XML
+				Uses implementating protocol as transport protocol
+				
+	Spring Framework and RESTFul Services
+		Libraries
+			Spring MVC
+			Spring WebFlux (Since Spring 5)
+				Reactive webservices
+			Functional WebFlux (Since Spring 5)
+				WebFlux.fn is a functional programming model used to define webservices
+				Alternative to annotation based configuration
+			Spring RestTemplate
+			Spring WebClient (Since Spring 5)
+		
+			Spring RestTemplate and Spring WebClient are used for consuming / invoking the RESTFul services
+	
+Spring MVC REST Services
+	In @PathVariable, the name attibute is optional if name of the path variable specified in request mapping is same as that of input parameter
+	
+	Return URI of the resource created
+		Add the URI to the HttpHeaders and return it as part of ResponseEntity
+		
+
+Spring Boot Dev Tools
+	Added via spring-boot-devtools dependency
+	Dev Tools are automatically disabled when running packaged app and also not included in repackaged archive
+	
+	Features
+		Auto restart App context when class changes
+		Uses 2 classloaders: application context and project jar dependencies
+		Restartes very fast since only your project classes are being loaded
+	
+		LiveReload
+			Automatically reloads the browser when resources are changed
+			This is included in Spring Dev Tools
+			
+API Versioning
+	Best practice
+	Allows to evolve the API without breaking existing API consumers
+	Typical lifespan
+		v1	-> Release 1
+		v2	-> Release 2, notify consumer v1 is deprecated
+		v3	-> Release 3, removing v1 is optional and notify v2 is deprecated
+		
+	Semantic Versioning 2.0.0
+		Version: Major.Minor.Patch
+			Major	--> May break the API
+			Minor	--> new functionality - back compatibility
+			Patch	--> Bug fix in backend
+			
+Spring RestTemplate
+	
+	
+HTTP Clients
+	Application Layer
+		Http
+	Transport Layer
+		TCP
+	Internet Layer
+		IP
+		
+		
+	Java Library
+		IO
+		Low level libraries for communicating with host machine
+		TCP/IP connections are made via sockets
+			Light weight but earlier Java created one thread per socket. This made sockets costlier
+			no of sockets supported by OS > no of threads
+		
+		Blocking and IO
+			Prior to Java 1.4, one thread per socket and made the thread blocking one
+			NIO (Non-blocking IO) were added in Java 1.4
+				One thread can use set of sockets
+			NIO2.0 added in Java 1.7 enabling nw tasks to be done ion background by OS
+			Non blocking is central to reactive programming
+		
+	HTTP Client Performance
+		Connection pools can be used
+		Non-blocking and connection pools can be used together for improving performance
+	
+	Java Libraries
+		Blocking Clients
+			JDK
+			Apache HTTP Client
+			Jersey
+			OkHttp
+		Non-Blocking Clients
+			Apache Aync Client
+			Jersey Async HTTP Client
+			Netty - Used by Reactive Spring
+	
+	HTTP2
+		More performance than HTTP1.1
+		Uses TCP more efficiently
+			Multiplex Streams
+			Binary Protocols / Compression
+			Reduced Latency
+			Faster encryption
+		Both server and client must support HTTP2 for implementation
+		Clients
+			Java 9+
+			Jetty
+			Netty
+			OkHttp
+			Vert.x
+			Firefly
+			Apache 5.x
+
+Apache HTTP Client COnfiguration
+	Add the following dependency
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpasyncclient</artifactId>
+			<version>4.1.4</version>
+		</dependency>
+	
+Apache Client Request Logging
+	Add the logging level in application.properties
+		logging.level.org.apache.http=DEBUG
+		
+Externalize Properties
+	Environment specific values and values that will help in performance tuning should be externalized which will eliminate the code rebuild
+	
+Spring MVC Validation
+	JSR 303 - Since Spring 3
+	JSR 349 - Since JDK7 and Spring 4
+		Method lebel parameter validation
+	JSR 380 - Since Springboot 2, Spring 5
+		Uses hibernate validator 6
+	
+	Built-in Constraint
+		@Null
+		@NotNull
+		@AssertTrue
+		@AssertFalse
+		@Min
+		@Max
+		@DecimalMax
+		@DecimalMin
+		@Negative
+		@NegativeOrZero
+		@Positive
+		@PositiveOrZero
+		@Size
+		@Digits
+		@Past
+		@PastOrPresent
+		@Future
+		@FutureOrPresent
+		@Pattern
+		@NotEmpty
+		@NonBlank
+		@Email
+	
+	Hiberanate Validator Constraints
+		@ScriptAssert
+		@CreditCardNumber
+		@Curreny
+		@DurationMax
+		@DurationMin
+		@EAN
+		@ISBN
+		@Length
+		@CodePointLength
+		@LuhnCheck
+		@Mod10Check
+		@Mod11Check
+		@Range
+		@SafeHtml
+		@UniqueElements
+		@Url
+		
+	Hiberanate Validatory COuntry Specific
+		@CNPJ
+		@CPF
+		@TituloEleitoral
+		@NIP
+		@PESEL
+		@REGON
+		
+	Adding Exception Handler to the Controller
+		Create a method in Controller and annotate with @ExceptionHandler and pass the exception class as attribute
+			Eg:
+				@ExceptionHandler(ConstraintViolationException.class)
+					ConstraintViolationException	--> For handling bean validation exceptions
+		The method will take exception as input parameter
+		
+	To annotate the input parameters in methods, annotate the class with @Validated and add the validation annotations to the input parameters
+	
+Lombok
+	Working
+		Hooks in the annotation processor API
+		The AST (raw source code) is passed to Lombok for code generation before Java compilation
+	
+	Features
+		val -> local variables declared final
+		var -> mutable local variable
+		@NonNull -> Checks null, throws NPE if null
+		@CleanUp -> Closes the resource in finally block by calling close()
+		@Value -> Immutable variant of @Data
+				  Marks all the fields as private and final by default
+		@SneakyThrows
+			Throw checked exception from method without being declared in method signature
+		@Synchronized
+		
+MapStruct
+	Similar to Lombok, it uses annotations for injecting the code
+	Converts the POJO to bean and vice-versa
+	
+	Configuration
+		Add the mapstruct dependency to maven and also specify the version since mapstruct is not integrated with spring-boot-starter dependencies
+		Add the following plugin
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct</artifactId>
+							<version>1.4.2.Final</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+					<compilerArgs>
+						<compilerArg>-Amapstruct.defaultComponentModel=Spring</compilerArg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+CircleCI
+	
+
+Spring REST Docs
+	Hooks into controller test to generate documentation snippets
+	Snippets are then assembled into final documentation via asciidoctor
+	Test Clients Supported
+		Spring MVC Test
+		WebTestClient (Webflux)
+		REST Assured
+	Default Snippets
+		curl-request
+		http-request
+		http-response
+		httpie-request
+		request-body
+		response-body
+	Options
+		Markdown can be used instead of asciidoctor
+		Maven and gradle may be used for build process
+		Doc to be served as static content can be packaged via spring boot
+		Extensive options for customizing asciidoctor output
+	Third Party Extensions
+		restdocs-wiremock
+		restdocsext-jersey
+		spring-auto-restdocs
+		restdocs-api-spec
+	
+	Configuring Spring RESTDocs MockMvc
+		1. Add the spring-restdocs-mockmvc dependency
+			<dependency>
+				<groupId>org.springframework.restdocs</groupId>
+				<artifactId>spring-restdocs-mockmvc</artifactId>
+				<scope>test</scope>
+			</dependency>
+		2. Add the plugin to generate REST Docs during package phase
+			<plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-ant</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backkend>html</backkend>
+                            <doctype>book</doctype>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.restdocs</groupId>
+                        <artifactId>spring-restdocs-mockmvc</artifactId>
+                        <version>${spring-restdocs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+		3. Configure index.adoc
+			Create a directory called asciidoc under src/main directory
+			Create a file called index.adoc under asciidoc directory
+			Add the following contents to the file
+				= SFG Brewery Order Service Docs
+				Balaji Sridharan;
+				:doctype: book
+				:icons: font
+				:source-highlighter: highlightjs
+
+				Sample application demonstrating how to use Spring REST Docs with JUnit 5.
+
+				`BeerOrderControllerTest` makes a call to a very simple service and produces three
+				documentation snippets.
+
+				One showing how to make a request using cURL:
+
+				include::{snippets}/orders/curl-request.adoc[]
+
+				One showing the HTTP request:
+
+				include::{snippets}/orders/http-request.adoc[]
+
+				And one showing the HTTP response:
+
+				include::{snippets}/orders/http-response.adoc[]
+
+				Response Body:
+				include::{snippets}/orders/response-body.adoc[]
+
+
+				Response Fields:
+				include::{snippets}/orders/response-fields.adoc[]
+		4. Generating REST Docs from Controller Test class
+			Configuring the test class
+				Add the following static import statements
+					import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+					import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+					import static org.springframework.restdocs.request.RequestDocumentation.*;
+				Remove the following static import statement
+					import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+				Add the following annotations
+					@ExtendWith(RestDocumentationExtension.class)
+					@AutoConfigureRestDocs
+			Generating REST Docs for Path Variable
+				After andExpect validation add the following:
+					.andDo(document("<URI without host and servlet context>",
+                        pathParameters(
+							parameterWithName("<name of the path variable used in URI>").description("<description of the path variable>")
+                        )
+					));
+			Generating REST Docs for Request Parameters
+				After andExpect validation add the following
+					.andDo(document("<URI without host and servlet context>",
+                        requestParameters(
+							parameterWithName("<name of the request parameter used in URI>").description("<description of the request parameter>")
+                        )
+					));
+			Generating REST Docs for Response
+				After andExpect validation add the following:
+					.andDo(document("v1/beer",
+                        responseFields(
+                                fieldWithPath("<field1>").description("<description>"),
+                                fieldWithPath("<field2>").description("<description>"),
+                                ....,
+                                fieldWithPath("<fieldn>").description("<description>")
+                        )
+					));
+				Note: All the fields in the response must be specified, else it will fail
+			Generating REST Docs for Request Body
+				After andExpect validation add the following:
+					.andDo(document("v1/beer",
+                      requestFields(
+                              fieldWithPath("id").ignored(),
+                              fieldWithPath("version").ignored(),
+                              fieldWithPath("createdDate").ignored(),
+                              fieldWithPath("lastModifiedDate").ignored(),
+                              fieldWithPath("beerName").description("Name of the beer"),
+                              fieldWithPath("beerStyle").description("Beer style"),
+                              fieldWithPath("upc").description("UPC of the beer"),
+                              fieldWithPath("price").description("Price of the beer"),
+                              fieldWithPath("quantityOnHand").ignored()
+                      )
+                ));
+				Note: All the fields in the response must be specified, else it will fail
+				For fields which are not excepted, use ignored()
+			Generating REST Docs for Field Validations
+				Create the following nested directories under test/resources
+					org
+						springframework
+							restdocs
+								templates
+				Create a file called request-fields.snippet under the templates directory
+				Add the following to the file. This is mustang template.
+					|===
+						|Path|Type|Description|Constraints
+					{{#fields}}
+						|{{path}}
+						|{{type}}
+						|{{description}}
+						|{{constraints}}
+					{{/fields}}
+						|===
+				Add the following static class in Test class
+					private static class ConstraintedFields {
+					
+						private final ConstraintDescriptions constraintDescriptions;
+
+						ConstraintedFields(Class<?> input) {
+							this.constraintDescriptions = new ConstraintDescriptions(input);
+						}
+
+						private FieldDescriptor withPath(String path) {
+							return  fieldWithPath(path).attributes(key("constraints").value(
+									StringUtils.collectionToDelimitedString(this.constraintDescriptions
+										.descriptionsForProperty(path), " ")
+							));
+						}
+
+					}
+				Example:
+					ConstraintedFields fields = new ConstraintedFields(BeerDto.class);
+
+					mockMvc.perform(post("/api/v1/beer/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(beerDtoJson))
+							.andExpect(status().isCreated())
+							.andDo(document("v1/beer",
+								  requestFields(
+										  fields.withPath("id").ignored(),
+										  fields.withPath("version").ignored(),
+										  fields.withPath("createdDate").ignored(),
+										  fields.withPath("lastModifiedDate").ignored(),
+										  fields.withPath("beerName").description("Name of the beer"),
+										  fields.withPath("beerStyle").description("Beer style"),
+										  fields.withPath("upc").description("UPC of the beer"),
+										  fields.withPath("price").description("Price of the beer"),
+										  fields.withPath("quantityOnHand").ignored()
+								  )
+							));
+			Customizing URI
+				@AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost", uriPort = 8080)
+			
+Jackson
+	Annotations
+		JsonProperty		- Sets the name of the property
+		JsonFormat			- Formats the data for serialization. Eg: Date & Time
+		JsonUnwrapped		- Allows you to flatten a property
+		JsonView			- Configures virtual views of objects
+		JsonManagedReference & JsonBackReference	- For mapping embedded items
+		JsonIdentityInfo	- Specify property to determine object identity
+		JsonFilter			- Specify programatic property filter
+		JsonAnyGetter		- Takes a Map property and serializes the key to property names and values to values
+		JsonGetter			- Allows to identify a method as getter which will be serialized into a property
+		JsonPropertyOrder	- Allows to set the order of properties in the serialized JSON output
+		JsonRawValue		- Will serialize the string value of the property as is. Warning: Can lead to invalid JSON
+	Json Serialization Annotations
+		JsonValue			- Allows to mark a method for serialization. Throws exception, if more than one methods are annotated
+		JsonRootName		- Creates a root element for the object
+		JsonSerialize		- Allows you to specify a custom serializer
+	Json Deserialization Annotations
+		JsonCreator			- Use identify the object constructor to use and property binding
+		JacksonInject		- Allows you to inject values into properties using deserialization
+		JsonAnySetter		- Converts JSON objecy into a Java Map object
+		JsonSetter			- Identifies a java method to use as a setter for the identified JSON property
+		JsonDeserialize		- Allows you specify a custom deserializer
+	Other Annotations
+		JsonIgnoreProperties	- Class level annotation used to tell the Jackson to ignore one or more property
+		JsonIgnore			- Field level annotation used to tell Jackson to ignore a property
+		JsonIgnoreType		- Class level annotation used to tell Jackson to typically ignore a class, where the class is a property in another class
+		JsonInclude			- Class level annotation used to control how null values are presented in serialization
+		JsonAutoDetect		- Jackson will use reflection in serialization. This allows you to tune which properties / methods are detected
+	
+	Property Naming Strategy
+		Jackson supports multiple formats for naming the properties which are provided in PropertyNamingStrategy.java
+		Add the strategy name as property in Spring properties file as below:
+			spring.jackson.property-naming-strategy=KEBAB_CASE
+		Note: JsonProperty overrides the property-naming-strategy
+
+DDD - Domain Driven Design
+
+Maven BOM (Bill of Materials)
+	Set the following in BOM
+		Common Maven Props
+		Common Maven Plugins and Configuration
+		Depdendency Versions
+		Common Depdendencies
+		Common Build Profile
+		Common inheritable props
+	Maven Enforcer Plugin
+		Enforces rules that the maven project should follow like java version, dependency versions, etc
+	

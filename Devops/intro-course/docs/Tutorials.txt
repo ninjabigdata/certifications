@@ -1,0 +1,88 @@
+Linux Commands
+	Basic
+		echo
+			To print the data to screen
+			Eg: echo Hi
+		ls
+			Lists the files in a directory
+			
+		cd
+			Changes the working directory
+			
+		pwd
+			Displays the path of working directory
+		mkdir
+			Creates a directory
+			Options
+				-p
+					Creates the directory in hierachy
+		Execute Multiple Commands
+			To execute multiple commands, separate them by ;
+		
+		rm
+			Deletes the file / directory
+			Options
+				-r
+					Deletes the directory and it's contents
+		cp
+			Copies the file / directory
+			Options
+				-r
+					Copies the directory and it's contents
+		touch
+			Creates a new file
+		cat
+			View the content of the file
+			Options:
+				>
+					Creates the new file and prompts to add the contents and press ctrl+D to exit
+		mv
+			Moves the file / directory
+		vi
+			Text editor
+			Move
+				Arrow keys / khjl
+			Delete
+				x
+					deletes a character
+				dd
+					deletes a line
+			copy / paste
+				yy
+					copies a line
+				p
+					pastes the line
+		whoami
+			current user
+		id
+			details of the current user
+		su
+			switch user
+				prompts password
+		ssh <username>@<ip>
+			SSH connection
+		
+	RPM
+		Managing the installations
+		The dependent packages will not be installed by rpm
+		
+		Install
+			rpm -i <packageName>.rpm
+		Unistall
+			rpm -e <packageName>.rpm
+		Query
+			rpm -q <packageName>.rpm
+			
+	YUM
+		Installs the dependent packages. Internally uses RPM
+		The packages are downloaded from a repository. This info is available at
+			/etc/yum.repos.d
+		Commands
+			yum repolist
+			yum list <packageName>
+			yum list
+			yum remove <packageName>
+			yum --showduplicates list <packageName>
+			yum install <packageNameWithVersion>
+			
+		

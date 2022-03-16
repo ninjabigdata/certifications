@@ -1,0 +1,230 @@
+Docker Engine
+	Docker Deamon
+		BG process that manages the docker objects like image, container, networks
+	Docker REST API Service
+		REST APIs to communicate with deamon
+	Docker CLI
+		Uses REST API to execute commands
+		It can be on another machine
+			Use -H option to specify the remote docker engine
+				-H=<hostName/IPAddress>:<portNumber>
+			Eg: docker -h=10.123.45.10:8047 run nginx
+
+Containerization
+	Docker internally uses namespaces to isolate the containers
+	Each container is associated with a namespace. This enables to create processes, unix timestamp, mount, interprocess, etc. And thus making the containers isolated among themselves
+	
+	Namespace PID
+		The linux machinbe starts with only one process with PID, 1. This is the root process which will start other processes
+		So when a container boots-up, it will also create a root process with PID, 1. But on an host, two or more processes cannot have the same PID. This is when namespace come into play.
+		So when the container's processes are viewed from host machine, those processes will have different PIDs
+	
+	CGroups
+		Containers share the resources of host like CPU, memory
+		By default, there is no restriction on how much resource could be utilized by the containers.
+		This could be restricted by
+			--cpus=.5
+			--memory=100m
+	
+References:
+	https://docs.docker.com/engine/
+	https://docs.docker.com/engine/api/
+	https://docs.docker.com/config/containers/runmetrics/#control-groups
+	
+Docker Storage
+	Default location to store docker data is
+		/var/lib/docker
+			aufs/
+			containers/
+			images/
+			volumes/
+	docker system df
+		Memory occupied by docker
+		Images, containers, local volumes
+	docker system df -v
+		Displays size for each item in each category
+		
+Docker Swarm
+	It's based on master-slave model
+	If master goes down, the remaining nodes will goes for election and chooses a leader
+	The information about the cluster, every node has a copy of the RAFT DB which contains the cluster details. But those DBs must be in sync
+	DB Sync
+		Say a node wants to join, the master will get the request. The master will broadcast the info to other nodes. Atleast one of the node must respond. After that master will accept the request and update the DB. Then DB sync will happen
+	Quorum
+		Mininum number of manager nodes required to accept a decision
+		Quorum = Floor((Number of manager nodes / 2) + 1)
+	Docker recommends 7 nodes for a cluster but no max limit
+	Fault Tolerance
+		No of manager nodes in a cluster can fail
+		Fault Tolerance = ((Number of manager nodes/2)-1)
+	
+	Ensure to have odd number of manager nodes in a cluster. On network segmentation, there is higher chance that cluster will be alive
+	
+	Cluster Failure
+		If number of manager nodes fails below Quorum, try to bring back the failed manager nodes
+		If this is not possible, run the following command to create a new cluster with the available manager nodes
+			docker swarm init --force-new-cluster --advertise-addr <IP>
+	To Promote existing worker node as manager
+		docker node promote
+	Manager Node
+		Bt default, manager node does management activities and also acts as worker node
+		This can be disabled by
+			docker node update --availablility drain <Node>
+			
+	Commands
+		docker node ls
+			Lists all the nodes in the cluster
+		docker node leave
+			To leave the cluster
+			This says whether the node is manager / worker. This can be identified from MANAGER STATUS column. For worker node, value will be empty. For manager, the value will be LEADER. If there are multiple managers, the manager other than primary manager, value will be REACHABLE
+		docker node rm <nodeName>
+			By default, when a node leaves the cluster, the status will be changed to down after some time. But the node will continue exist in the list.
+			To remove the node from the cluster, run this command
+		docker swarm join-token manager
+			Outputs the command to join the cluster as manager
+		docker swarm join-token worker
+			Outputs the command to join the cluster as worker
+		docker node promote <nodeName>
+			Promotes the worker node as manager. This command can be executed only from manager node. From worker node, it returns error
+
+Docker Service
+	docker service create --replicas=<numberOfInstances> <containerName>
+		This runs an Orchestrator task on manager
+		Then schedules the task in worker nodes through Scheduler
+		The services are initiated on worker nodes through Task
+		Task keeps the status of the worker to manager
+		
+	Global vs Replica Services
+		Replica services run on all the worker nodes
+		Global services run on only one node. The services like log collectors, anti-virus will run on only one node.
+			docker service create --mode global <service-agent>
+				One service agent is placed on each node
+	
+	Naming the containers
+		The docker service appends numbers starting from 1 to the name of the services in each worker node
+	
+	Update the service
+		docker service update --replicas=<numberOfInstances> <serviceName>
+	
+	Commands
+		docker service ls
+		docker service ps <serviceId>
+		docker service rm <serviceId>
+		docker node update --availablility drain <nodeName>
+
+Docker Networking
+	Overlay Network
+		Network for containers to communicate across the clusters
+		
+		Creaye Overlay Network
+			docker network create --driver overlay --subnet 10.0.9.0/24 my-overlay-network
+		Attach a service to the overlay network
+			docker service create --replicas 2 --network my-overlay-network nginx
+	
+	Ingress Network
+		Using host network, the container app exposes the app on a port which is same as the host port. If we run the container multiple times, it will not run due to port mapping.
+		In case of docker swarm, a network will be created automatically to solve this issue. Such network is called ingress network. This network implements load-balacing on the conatiners
+		
+	Embedded DNS
+		The docker has an in-built DNS resolver. Each container can be identified using its name
+		This DNS server runs at 127.0.0.11
+
+Docker Stacks
+	Similar to docker-compose.yml for single container. A docker-compose.yml can be created to run the docker service commands. Run the file using, docker stack deploy
+	
+	Sample docker-compose.yml
+		version: 3
+		services:
+			redis:
+				image: redis
+				deploy:
+					replicas: 1
+					resources:
+						limits:
+							cpus: 0.01
+							memory: 50M
+			db:
+				image: postgres:9.4
+				deploy:
+					replicas: 1
+					placement:
+						constraints:
+							- node.hostname == node1
+							- node.role == manager
+			vote:
+				image: vote-app
+				deploy:
+					replicas: 2
+			result:
+				image: result
+				deploy:
+					replicas: 1
+			worker:
+				image: worker
+				deploy:
+					replicas: 1
+					
+Docker Visualizer
+	Helps to view the cluster in web-console
+	
+CI/CD Pipeline
+	Docker Cloud
+
+Kubernetes
+	The containers on a node have to be encapsulated inside a component called Pod
+	
+	Commands
+		kubectl get nodes
+		kubectl get pods
+		kubectl get services
+		kubectl create -f <definition-yaml-file>
+		kubectl delete -f <definition-yaml-file>
+		
+		pod file
+			apiversion: v1
+			kind: Pod
+			metadata:
+				name: <pod-name>
+				labels:
+					name: <pod-name>
+					app: <app-name>
+			spec:
+				containers:
+				- name: <container-name>
+				  image: <image-name>
+				  ports:
+				  - containerPort: <port-number>
+	
+	
+		service file (internal/ClusterIP)
+			apiversion: v1
+			kind: Service
+			metadata:
+				name: <name>
+				labels:
+					name: <service-name>
+					app: <app-name>
+			spec:
+				ports:
+				- port: 6379
+				  targetPort: 6379
+				selector:
+				  name: <pod-name>
+				  app: <app-name>
+				  
+		Service file (external/LoadBalancer)
+			apiversion: v1
+			kind: Service
+			metadata:
+				name: <service-name>
+				labels:
+					name: <service-name>
+					app: <app-name>
+			spec:
+				type: LoadBalancer
+				ports:
+				- port: 6379
+				  targetPort: 6379
+				selector:
+				  name: <pod-name>
+				  app: <app-name>

@@ -1,0 +1,120 @@
+JMS
+	Allows Java app to send message to another app
+	JMS is a standard like JPA
+	Features
+		Highly Scalable
+		Loose couple applications using async messaging
+		
+	Implementations
+		Amazon SQS
+		Apache ActiveMQ
+		JBoss Messaging
+		IBM MQ
+		OracleMQ
+		RabbitMQ
+	
+	Advantages of JMS over REST
+		JMS is true messaging service
+		Async
+		Greater throughput - HTTP is relatively slow
+		Flexibity in message delivery - deliver a message to one / multiple consumers
+		Security
+		Reliabilty - Can guarantee message deliver
+		
+	Types of Messaging
+		Point to Point
+			Message is queued and delivered to one consumer
+			Can have multiple consumers - but message will be delivered only once
+			Consumers connect to a queue
+			Only one consumer can receive the message in case of multiple consumers
+		Publish / Subscribe
+			Message is delivered to one / more subscribers
+			Subscriber will subscribe to a Topic, then receive a copy of all messages sent to the Topic
+		
+	Key Terms
+		JMS Provider
+			JMS implementation
+		JMS Client
+			App which receieves / sends messages from JMS Provider
+		JMS Producer / Publisher
+			JMS client which sends messages
+		JMS Consumer / Subscriber
+			JMS client which receieves messages
+		JMS Message
+			Data sent
+		JMS Queue
+			Queue for Point to Point messages. Often, not always, FIFO
+		JMS Topic
+			Similar to queue but for Publish / Subscribe
+	
+	JMS Message - Structure
+		Header
+			Meta data about the message
+		Properties
+			Application
+				From Java App messaging system
+			Provider
+				Used by JMS provider and implementation specific
+			Standard Properties
+				Defined by the JMS API - not by provider
+		Payload
+			Message itself
+			
+	JMS Header - Properties
+		JMSCorrelationID
+			String value, typically UUID, set by the app to trace the message
+		JMSExpires
+			Long - zero, does not expire. Else, time when message will expire and removed from queue
+		JMSMessageId
+			String value - typically set by the JMS provider
+		JMSPriority
+			Integer - Priority of the message
+		JMSTimestamp
+			Long - Time message was sent
+		JMSType
+			String - Type of message
+		JMSReplyTo
+			Queue or Topic which expects the reply
+		JMSRedelivery
+			Boolean
+		JMSDeliveryMode
+			Integer - set by the JMS provider
+			Types
+				Persistant (Default) 
+					JMS Provider should make best effort to deliver the message
+				Non-Persistant
+					Occasional loss is acceptable
+	JMS Message Properties
+		JMSXUserId
+			String - User id sending message. Set by JMS provider
+		JMSXAppID
+			String - Id of the app sending the message. Set by JMS Provider
+		JMSXDeliveryCount
+			Int - number of delivery attempts. Set by JMS Provider
+		JMSXGroupID
+			String - Message group which the message is part of. Set by client
+		JMSXGroupSeq
+			int - seq num of msg in group. Set by client
+		JMSXProducerTDIX
+			String - Trans id when message was produced. Set by JMS Provider
+		JMSXConsumerTDIX
+			String - Trans id when msg was consumed. Set by JMS Provider
+		JMSXRcvTimestamp
+			Long - Timestamp when msg was delivered to consumer. Set by JMS provider
+		JMSXState
+			int - State of the JMS Msg. Set by JMS Provider
+	
+	JMS Message Types
+		Message
+			No payload. Often used to notify about event
+		BytesMessage
+			Payload is array of bytes
+		TextMessage
+			Message is stored as string - often JSON / XML
+		SteamMessage
+			Seq of java primitives
+		MapMessage
+			Message is name-value pairs
+		ObjectMessage
+			Message is serialized Java Object
+		
