@@ -87,3 +87,90 @@ Maven
 		https://www.petrikainulainen.net/programming/maven/creating-code-coverage-reports-for-unit-and-integration-tests-with-the-jacoco-maven-plugin/
 	
 	
+	Maven Repository
+		Order for resolving the artifact
+			Local repository
+			Maven Central
+			Any additional repositories configured
+			
+		Repository Mirrors
+			Are used to override project defined repository values
+			Mirrors are confidured in settings.xml
+			Mirror will override the URL of the repository
+			Can be used to improve performance by directing to regional servers
+			Or redirect to internal repository manager
+			values set in settings.xml will apply to all projects executed on system
+		
+		Repository Element
+			id
+				unique value required
+			name
+				human readable name
+			url
+				URL for repository
+			layout
+				legacy or default (Default is generally used)
+			releases
+				Repository policy for handling downloading of releases
+			snapshots
+				Repository policy for handling downloading of snapshots
+		
+			
+			Repository Policy
+				used for release and snapshot elements of Repository elements
+				
+				enabled
+					true or false
+				updatePolicy
+					always, daily (Default), interval:XXX(XXX in minutes), never
+				checksumPolicy
+					what to do if verification of artifact fail
+					values: ignore, fail, warn
+		
+		Common Public Maven Repository
+			Apache Maven
+			Sonatype --> staging repository used to publish artifacts to Maven Central
+			JCenter
+				Default for Android Studio and Gradle
+			JBoss
+				Artifacts for JBoss
+			Atlassian
+			Oracle
+			Spring Framework
+			
+		Maven Settings XML Elements
+			localRepository
+				Allows to override the location of local maven repository
+			interactiveMode
+				Allows to set interactive /batch mode. Defaults to interactive
+			usePluginRegistry
+				Maven 2.0. No longer used in Maven 3.0
+			offline
+				defaults to false. if true, maven does not connect to remote repositories
+			pluginGroups
+				list plugin group ids, to allow abbreviated plugin goals
+			servers
+				allows to set user credentials for servers which maven connects to
+			mirrors
+				allows to configure mirrors for repositories
+			proxies
+				define network proxies
+			profiles
+				define build profiles
+			activeProfiles
+				define active profile
+			
+		Maven Bill Of Materials
+			Very similar to parent pom
+			Inherits properties
+			Set of curated dependencies
+		
+			BOM Configuration
+				Set 
+					common maven properties
+					common maven plugins and configuration
+					dependency version
+					common dependencies
+					common build profile
+					any inhertiable property which is common
+	

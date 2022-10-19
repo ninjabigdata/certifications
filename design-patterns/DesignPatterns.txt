@@ -219,7 +219,7 @@ Design Patterns
 		When class is considered to be closed
 			Tested to be functioning properly
 			All the attributes and behaviors are encapsulated
-			Proveb to be stable within your system
+			Proven to be stable within your system
 			
 		Changes to the classes are during the analysis and design stages
 		
